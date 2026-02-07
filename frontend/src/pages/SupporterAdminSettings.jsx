@@ -1,0 +1,343 @@
+import { useState } from "react";
+import { useParams, useOutletContext, useNavigate } from "react-router-dom";
+import { AlertTriangle, Ban, PauseCircle, CheckCircle, Trash2 } from "lucide-react";
+import ConfirmationModal from "../components/ConfirmationModal";
+
+const SupporterAdminSettings = () => {
+  const { id } = useParams();
+  const navigate = useNavigate();
+  const { supporter, refreshSupporter } = useOutletContext();
+  const [loading, setLoading] = useState(false);
+  const [actionReason, setActionReason] = useState("");
+  
+  // Modal State
+  const [modalOpen, setModalOpen] = useState(false);
+  const [modalConfig, setModalConfig] = useState({
+    type: "info",
+    title: "",
+    message: "",
+    confirmText: "",
+    onConfirm: () => {},
+    showReasonInput: false,
+  });
+
+  const isVerified = supporter.setupStatus === "verified";
+  const isBanned = supporter.setupStatus === "banned";
+  const isSuspended = supporter.setupStatus === "suspended";
+
+  const openConfirmModal = (type, title, message, confirmText, onConfirm, showReasonInput = false) => {
+    setModalConfig({ type, title, message, confirmText, onConfirm, showReasonInput });
+    setModalOpen(true);
+  };
+
+  const handleVerify = async () => {
+    setLoading(true);
+    try {
+      const token = localStorage.getItem("adminToken") || localStorage.getItem("kamp_token");
+      const res = await fetch(`http://localhost:3001/api/admin/supporters/${id}/status`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ setupStatus: "verified" }),
+      });
+      
+      if (res.ok) {
+        await refreshSupporter();
+        setModalOpen(false);
+      }
+    } catch (error) {
+      console.error("Error verifying supporter:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleBan = async () => {
+    if (!actionReason.trim()) return;
+
+    setLoading(true);
+    try {
+      const token = localStorage.getItem("adminToken") || localStorage.getItem("kamp_token");
+      const res = await fetch(`http://localhost:3001/api/admin/supporters/${id}/action`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ action: "ban", reason: actionReason }),
+      });
+      
+      if (res.ok) {
+        await refreshSupporter();
+        setModalOpen(false);
+        setActionReason("");
+      }
+    } catch (error) {
+      console.error("Error banning supporter:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleSuspend = async () => {
+    if (!actionReason.trim()) return;
+
+    setLoading(true);
+    try {
+      const token = localStorage.getItem("adminToken") || localStorage.getItem("kamp_token");
+      const res = await fetch(`http://localhost:3001/api/admin/supporters/${id}/action`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ action: "suspend", reason: actionReason }),
+      });
+      
+      if (res.ok) {
+        await refreshSupporter();
+        setModalOpen(false);
+        setActionReason("");
+      }
+    } catch (error) {
+      console.error("Error suspending supporter:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleReactivate = async () => {
+    setLoading(true);
+    try {
+      const token = localStorage.getItem("adminToken") || localStorage.getItem("kamp_token");
+      const res = await fetch(`http://localhost:3001/api/admin/supporters/${id}/status`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ setupStatus: "verified" }),
+      });
+      
+      if (res.ok) {
+        await refreshSupporter();
+        setModalOpen(false);
+      }
+    } catch (error) {
+      console.error("Error reactivating supporter:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleDelete = async () => {
+    setLoading(true);
+    try {
+      const token = localStorage.getItem("adminToken") || localStorage.getItem("kamp_token");
+      const res = await fetch(`http://localhost:3001/api/admin/supporters/${id}`, {
+        method: "DELETE",
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      
+      if (res.ok) {
+        setModalOpen(false);
+        window.close(); // Close the tab
+        setTimeout(() => {
+          navigate("/admin/supporters");
+        }, 100);
+      }
+    } catch (error) {
+      console.error("Error deleting supporter:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div className="space-y-6">
+      <div>
+        <h2 className="text-2xl font-bold text-gray-900 mb-2">Settings</h2>
+        <p className="text-sm text-gray-500">
+          Manage supporter status and permissions
+        </p>
+      </div>
+
+      {/* Current Status */}
+      <div className="bg-white rounded-xl border border-gray-200 p-6">
+        <h3 className="text-lg font-semibold text-gray-900 mb-4">Current Status</h3>
+        <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+          <div>
+            <p className="text-sm text-gray-600 mb-1">Account Status</p>
+            <p className={`text-lg font-semibold ${
+              isVerified ? "text-green-600" :
+              isBanned ? "text-red-600" :
+              isSuspended ? "text-orange-600" :
+              "text-yellow-600"
+            }`}>
+              {supporter.setupStatus.replace("_", " ").toUpperCase()}
+            </p>
+          </div>
+          <div className={`w-12 h-12 rounded-full flex items-center justify-center ${
+            isVerified ? "bg-green-100" :
+            isBanned ? "bg-red-100" :
+            isSuspended ? "bg-orange-100" :
+            "bg-yellow-100"
+          }`}>
+            {isVerified ? <CheckCircle className="w-6 h-6 text-green-600" /> :
+             isBanned ? <Ban className="w-6 h-6 text-red-600" /> :
+             isSuspended ? <PauseCircle className="w-6 h-6 text-orange-600" /> :
+             <AlertTriangle className="w-6 h-6 text-yellow-600" />}
+          </div>
+        </div>
+      </div>
+
+      {/* Verification */}
+      {!isVerified && !isBanned && !isSuspended && (
+        <div className="bg-white rounded-xl border border-gray-200 p-6">
+          <h3 className="text-lg font-semibold text-gray-900 mb-4">Verification</h3>
+          <p className="text-sm text-gray-600 mb-4">
+            Verify this supporter to allow them full access to the platform.
+          </p>
+          <button
+            onClick={() => openConfirmModal(
+              "success",
+              "Verify Supporter",
+              `Are you sure you want to verify ${supporter.userId?.name}? They will gain full access to the platform.`,
+              "Confirm Verification",
+              handleVerify
+            )}
+            disabled={loading}
+            className="px-6 py-2.5 bg-green-600 text-white rounded-lg font-medium hover:bg-green-700 transition disabled:opacity-50 flex items-center gap-2"
+          >
+            <CheckCircle className="w-5 h-5" />
+            Verify Supporter
+          </button>
+        </div>
+      )}
+
+      {/* Ban/Suspend Actions (Only for verified supporters) */}
+      {isVerified && (
+        <div className="bg-white rounded-xl border border-red-200 p-6">
+          <div className="flex items-start gap-3 mb-4">
+            <AlertTriangle className="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5" />
+            <div>
+              <h3 className="text-lg font-semibold text-gray-900 mb-2">Restrict Access</h3>
+              <p className="text-sm text-gray-600">
+                Suspend or ban this supporter if they violate KAMP policies.
+              </p>
+            </div>
+          </div>
+          <div className="flex gap-3">
+            <button
+              onClick={() => openConfirmModal(
+                "suspend",
+                "Suspend Supporter",
+                "Explain why this supporter is being suspended. They will be notified and lose access temporarily.",
+                "Confirm Suspension",
+                handleSuspend,
+                true
+              )}
+              disabled={loading}
+              className="px-6 py-2.5 bg-orange-600 text-white rounded-lg font-medium hover:bg-orange-700 transition disabled:opacity-50 flex items-center gap-2"
+            >
+              <PauseCircle className="w-5 h-5" />
+              Suspend
+            </button>
+            <button
+              onClick={() => openConfirmModal(
+                "ban",
+                "Ban Supporter",
+                "Provide a reason for banning this supporter. This is a severe action and they will lose all access.",
+                "Confirm Ban",
+                handleBan,
+                true
+              )}
+              disabled={loading}
+              className="px-6 py-2.5 bg-red-600 text-white rounded-lg font-medium hover:bg-red-700 transition disabled:opacity-50 flex items-center gap-2"
+            >
+              <Ban className="w-5 h-5" />
+              Ban
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Reactivate (For banned/suspended supporters) */}
+      {(isBanned || isSuspended) && (
+        <div className="bg-white rounded-xl border border-green-200 p-6">
+          <h3 className="text-lg font-semibold text-gray-900 mb-4">Reactivate Supporter</h3>
+          <p className="text-sm text-gray-600 mb-4">
+            Restore this supporter&apos;s access and change their status back to verified.
+          </p>
+          {supporter.actionReason && (
+            <div className="p-3 bg-red-50 border border-red-200 rounded-lg mb-4">
+              <p className="text-xs text-red-600 mb-1">Current Restriction Reason:</p>
+              <p className="text-sm text-red-800">{supporter.actionReason}</p>
+            </div>
+          )}
+          <button
+            onClick={() => openConfirmModal(
+              "success",
+              "Reactivate Supporter",
+              `Are you sure you want to restore access for ${supporter.userId?.name}?`,
+              "Confirm Reactivation",
+              handleReactivate
+            )}
+            disabled={loading}
+            className="px-6 py-2.5 bg-green-600 text-white rounded-lg font-medium hover:bg-green-700 transition disabled:opacity-50 flex items-center gap-2"
+          >
+            <CheckCircle className="w-5 h-5" />
+            Reactivate Supporter
+          </button>
+        </div>
+      )}
+
+      {/* Delete */}
+      <div className="bg-white rounded-xl border border-red-300 p-6">
+        <div className="flex items-start gap-3 mb-4">
+          <Trash2 className="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5" />
+          <div>
+            <h3 className="text-lg font-semibold text-gray-900 mb-2">Delete Supporter</h3>
+            <p className="text-sm text-gray-600">
+              Permanently delete this supporter and their user account. This action cannot be undone.
+            </p>
+          </div>
+        </div>
+        <button
+          onClick={() => openConfirmModal(
+            "danger",
+            "Delete Supporter",
+            "This action is permanent and cannot be undone. Are you sure you want to delete this supporter and all their data?",
+            "Delete Permanently",
+            handleDelete
+          )}
+          disabled={loading}
+          className="px-6 py-2.5 bg-red-600 text-white rounded-lg font-medium hover:bg-red-700 transition disabled:opacity-50"
+        >
+          Delete Supporter
+        </button>
+      </div>
+
+      <ConfirmationModal
+        isOpen={modalOpen}
+        onClose={() => {
+          setModalOpen(false);
+          setActionReason("");
+        }}
+        onConfirm={modalConfig.onConfirm}
+        type={modalConfig.type}
+        title={modalConfig.title}
+        message={modalConfig.message}
+        confirmText={modalConfig.confirmText}
+        isLoading={loading}
+        showReasonInput={modalConfig.showReasonInput}
+        reasonValue={actionReason}
+        onReasonChange={setActionReason}
+      />
+    </div>
+  );
+};
+
+export default SupporterAdminSettings;
