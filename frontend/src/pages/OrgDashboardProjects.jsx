@@ -4,6 +4,7 @@ import ProjectInfoModal from "../components/ProjectInfoModal";
 import ApplyProjectModal from "../components/ApplyProjectModal";
 import DonationForm from "../components/DonationForm";
 import CreateProjectModal from "../components/CreateProjectModal";
+import { api } from "../config";
 
 const OrgDashboardProjects = () => {
   const [projects, setProjects] = useState([]);
@@ -29,7 +30,7 @@ const OrgDashboardProjects = () => {
 
   const fetchProjects = async () => {
     try {
-      const res = await fetch("http://localhost:3001/api/projects", {
+      const res = await fetch(api("/api/projects"), {
         headers: { Authorization: `Bearer ${token}` },
       });
       if (res.ok) setProjects(await res.json());
@@ -39,7 +40,7 @@ const OrgDashboardProjects = () => {
 
   const fetchApplications = async () => {
     try {
-      const res = await fetch("http://localhost:3001/api/applications/my-applications", {
+      const res = await fetch(api("/api/applications/my-applications"), {
         headers: { Authorization: `Bearer ${token}` },
       });
       if (res.ok) {
@@ -94,7 +95,7 @@ const OrgDashboardProjects = () => {
 
   const handleCreateProject = async (newProjectData) => {
     try {
-      const response = await fetch("http://localhost:3001/api/projects", {
+      const response = await fetch(api("/api/projects"), {
         method: "POST",
         headers: { 
           "Content-Type": "application/json",

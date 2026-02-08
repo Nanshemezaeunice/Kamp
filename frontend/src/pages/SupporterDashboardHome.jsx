@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { api } from "../config";
 
 const SupporterDashboardHome = () => {
   const user = JSON.parse(localStorage.getItem("kamp_user") || "{}");
@@ -9,7 +10,7 @@ const SupporterDashboardHome = () => {
     const fetchStats = async () => {
       try {
         const token = localStorage.getItem("kamp_token");
-        const res = await fetch("http://localhost:3001/api/donations", {
+        const res = await fetch(api("/api/donations"), {
           headers: { Authorization: `Bearer ${token}` },
         });
         if (res.ok) {

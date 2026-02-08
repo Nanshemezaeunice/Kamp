@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { FolderKanban, Calendar, DollarSign, Users, TrendingUp, ExternalLink } from "lucide-react";
+import { api } from "../config";
 
 const SupporterMyProjects = () => {
   const [projects, setProjects] = useState([]);
@@ -15,7 +16,7 @@ const SupporterMyProjects = () => {
     try {
       setLoading(true);
       // Fetch applications where this supporter was accepted
-      const appsRes = await fetch("http://localhost:3001/api/applications/my-applications", {
+      const appsRes = await fetch(api("/api/applications/my-applications"), {
         headers: { Authorization: `Bearer ${token}` },
       });
       

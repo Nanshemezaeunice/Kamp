@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { CheckCircle } from "lucide-react";
+import { api } from "../config";
 
 const interestOptions = [
   "Donating", "Volunteering", "Advocacy",
@@ -30,7 +31,7 @@ const SupporterSetup = () => {
         const token = localStorage.getItem("kamp_token");
         if (!token) { navigate("/get-started"); return; }
 
-        const res = await fetch("http://localhost:3001/api/profiles/individual/me", {
+        const res = await fetch(api("/api/profiles/individual/me"), {
           headers: { Authorization: `Bearer ${token}` },
         });
         if (res.ok) {
@@ -66,7 +67,7 @@ const SupporterSetup = () => {
     setSaving(true);
     try {
       const token = localStorage.getItem("kamp_token");
-      const res = await fetch("http://localhost:3001/api/profiles/individual/me", {
+      const res = await fetch(api("/api/profiles/individual/me"), {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",

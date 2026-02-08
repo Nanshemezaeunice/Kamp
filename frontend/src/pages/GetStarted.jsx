@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { api } from "../config";
 import { Link, useNavigate } from "react-router-dom";
 import { Eye, EyeOff } from "lucide-react";
 
@@ -49,7 +50,7 @@ const GetStarted = () => {
     }
     setNgoLoading(true);
     try {
-      const res = await fetch("http://localhost:3001/api/auth/register", {
+      const res = await fetch(api("/api/auth/register"), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

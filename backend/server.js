@@ -9,7 +9,24 @@ connectDB();
 
 const app = express();
 
-app.use(cors());
+// CORS configuration for frontend URLs (local dev, Netlify, and Render)
+const allowedOrigins = [
+  "http://localhost:5173",
+  "http://localhost:3000",
+  "https://enchanting-nougat-bdb9ef.netlify.app",
+];
+
+app.use(cors({
+  origin: (origin, callback) => {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error("CORS not allowed"));
+    }
+  },
+  credentials: true,
+}));
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 

@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { api } from "../config";
 import { Link } from "react-router-dom";
 import { FolderKanban, Calendar, DollarSign, Users, TrendingUp, ExternalLink } from "lucide-react";
 
@@ -15,7 +16,7 @@ const OrgMyProjects = () => {
     try {
       setLoading(true);
       // Fetch applications where this organization was accepted
-      const appsRes = await fetch("http://localhost:3001/api/applications/my-applications", {
+      const appsRes = await fetch(api("/api/applications/my-applications"), {
         headers: { Authorization: `Bearer ${token}` },
       });
       

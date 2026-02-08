@@ -5,6 +5,7 @@ import ProjectInfoModal from "../components/ProjectInfoModal";
 import ApplyProjectModal from "../components/ApplyProjectModal";
 import CreateProjectModal from "../components/CreateProjectModal";
 import { Plus } from "lucide-react";
+import { api } from "../config";
 
 const Projects = () => {
   const [projects, setProjects] = useState([]);
@@ -32,7 +33,7 @@ const Projects = () => {
 
   const fetchProjects = async () => {
     try {
-      const response = await fetch("http://localhost:3001/api/projects", {
+      const response = await fetch(api("/api/projects"), {
         headers: token ? { Authorization: `Bearer ${token}` } : {},
       });
       if (!response.ok) throw new Error("Failed to fetch projects");
@@ -47,7 +48,7 @@ const Projects = () => {
 
   const fetchMyApplications = async () => {
     try {
-      const res = await fetch("http://localhost:3001/api/applications/my-applications", {
+      const res = await fetch(api("/api/applications/my-applications"), {
         headers: { Authorization: `Bearer ${token}` },
       });
       if (res.ok) {
@@ -88,7 +89,7 @@ const Projects = () => {
 
   const handleCreateProject = async (newProjectData) => {
     try {
-      const response = await fetch("http://localhost:3001/api/projects", {
+      const response = await fetch(api("/api/projects"), {
         method: "POST",
         headers: { 
           "Content-Type": "application/json",

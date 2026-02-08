@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { api } from "../config";
 import { Users, Shield, Eye, UserCheck } from "lucide-react";
 import ConfirmationModal from "../components/ConfirmationModal";
 
@@ -43,7 +44,7 @@ const OrgMembers = () => {
     try {
       setIsLoading(true);
       const token = localStorage.getItem("kamp_token");
-      const response = await fetch("http://localhost:3001/api/organization/members", {
+      const response = await fetch(api("/api/organization/members"), {
         headers: {
           "Authorization": `Bearer ${token}`
         }
@@ -105,7 +106,7 @@ const OrgMembers = () => {
       const token = localStorage.getItem("kamp_token");
       const url = editingMember 
         ? `http://localhost:3001/api/organization/members/${editingMember._id}` 
-        : "http://localhost:3001/api/organization/members";
+        : api("/api/organization/members");
       
       const method = editingMember ? "PUT" : "POST";
       
