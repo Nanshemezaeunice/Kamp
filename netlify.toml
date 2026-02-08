@@ -1,0 +1,9 @@
+[build]
+  # Run from the frontend directory and build with the project's script
+  base = "frontend"
+  command = "npm run build"
+  publish = "dist"
+
+[functions]
+  # Optional: where Netlify Functions live in this repo
+  directory = "frontend/netlify/functions"
