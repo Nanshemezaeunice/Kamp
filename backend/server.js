@@ -17,9 +17,25 @@ const allowedOrigins = [
   "https://kamp-7waq.onrender.com",
 ];
 
-// CORS configuration - allow all origins with proper headers
+// Custom CORS middleware with explicit header handling
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
+  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With');
+  res.header('Access-Control-Allow-Credentials', 'true');
+  res.header('Access-Control-Max-Age', '86400');
+  
+  if (req.method === 'OPTIONS') {
+    return res.sendStatus(200);
+  }
+  next();
+});
+
+// Also apply cors middleware as backup
 app.use(cors({
-  origin: true, // Allow any origin
+  origin: function(origin, callback) {
+    callback(null, true); // Allow all origins
+  },
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
@@ -28,8 +44,8 @@ app.use(cors({
   optionsSuccessStatus: 200,
 }));
 
-// Handle preflight requests
-app.options("*", cors());
+// Handle preflight requests explicitly
+app.options('*', cors());
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
