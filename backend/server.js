@@ -14,6 +14,7 @@ const allowedOrigins = [
   "http://localhost:5173",
   "http://localhost:3000",
   "https://enchanting-nougat-bdb9ef.netlify.app",
+  "https://kamp-7waq.onrender.com",
 ];
 
 app.use(cors({
