@@ -17,15 +17,17 @@ const allowedOrigins = [
   "https://kamp-7waq.onrender.com",
 ];
 
-// CORS - Temporarily allow all origins for testing/debugging
-// TODO: Tighten this after confirming backend is redeploying
+// CORS configuration - allow all origins with proper headers
 app.use(cors({
-  origin: "*",
-  credentials: false,
+  origin: true, // Allow any origin
+  credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
+  preflightContinue: false,
+  optionsSuccessStatus: 200,
 }));
 
+// Handle preflight requests
 app.options("*", cors());
 
 app.use(express.json());
@@ -43,8 +45,24 @@ app.use("/api/profiles", require("./routes/profileRoutes"));
 app.use("/api/organization/members", require("./routes/orgMemberRoutes"));
 app.use("/api/users", require("./routes/userRoutes"));
 
+// Health check endpoint
+app.get("/", (req, res) => {
+  res.json({ message: "KAMP API is running" });
+});
+
 app.get("/api", (req, res) => {
   res.json({ message: "Welcome to KAMP API" });
+});
+
+// 404 handler
+app.use((req, res) => {
+  res.status(404).json({ error: "Endpoint not found", path: req.path });
+});
+
+// Error handler
+app.use((err, req, res, next) => {
+  console.error(err);
+  res.status(500).json({ error: "Internal server error" });
 });
 
 const PORT = process.env.PORT || 3001;

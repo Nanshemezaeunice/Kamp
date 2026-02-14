@@ -33,13 +33,19 @@ const Projects = () => {
 
   const fetchProjects = async () => {
     try {
-      const response = await fetch(api("/api/projects"), {
+      const url = api("/api/projects");
+      console.log("Fetching from:", url); // Debug log
+      const response = await fetch(url, {
         headers: token ? { Authorization: `Bearer ${token}` } : {},
+        method: "GET",
       });
-      if (!response.ok) throw new Error("Failed to fetch projects");
+      if (!response.ok) {
+        throw new Error(`Server error: ${response.status} ${response.statusText}`);
+      }
       const data = await response.json();
       setProjects(data);
     } catch (err) {
+      console.error("Fetch error:", err); // Debug log
       setError(err.message);
     } finally {
       setLoading(false);
@@ -141,23 +147,7 @@ const Projects = () => {
         </div>
       </section>
 
-      {/* Stats Cards */}
-      <section className="max-w-7xl mx-auto px-4 -mt-10 mb-12 relative z-10">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div className="bg-white p-6 rounded-2xl shadow-xl border border-gray-100">
-            <p className="text-gray-500 text-sm font-medium">Approved Projects</p>
-            <p className="text-3xl font-bold text-gray-900">{projects.filter(p => p.approvalStatus === 'approved').length}</p>
-          </div>
-          <div className="bg-white p-6 rounded-2xl shadow-xl border border-gray-100">
-            <p className="text-gray-500 text-sm font-medium">My Submissions</p>
-            <p className="text-3xl font-bold text-blue-600">{projects.filter(p => p.creatorId === user?.id || p.creatorId?._id === user?.id).length}</p>
-          </div>
-          <div className="bg-white p-6 rounded-2xl shadow-xl border border-gray-100">
-            <p className="text-gray-500 text-sm font-medium">Total Raised</p>
-            <p className="text-3xl font-bold text-green-600">$1.4M</p>
-          </div>
-        </div>
-      </section>
+      
 
       {/* Projects Grid */}
       <section className="py-16 min-h-100">
