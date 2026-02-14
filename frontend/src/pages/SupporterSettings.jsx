@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { api } from "../config";
 import { User, Lock, Heart, Mail, Eye, EyeOff, Upload, Camera } from "lucide-react";
 
 const SupporterSettings = () => {
@@ -44,7 +45,7 @@ const SupporterSettings = () => {
       if (!userStr) return;
       const userId = JSON.parse(userStr).id;
       
-      const response = await fetch(`http://localhost:3001/api/users/${userId}`, {
+      const response = await fetch(api(`/api/users/${userId}`), {
         headers: { Authorization: `Bearer ${token}` }
       });
       
@@ -93,7 +94,7 @@ const SupporterSettings = () => {
       const token = localStorage.getItem("kamp_token");
       const userId = JSON.parse(localStorage.getItem("kamp_user") || "{}").id;
       
-      const response = await fetch(`http://localhost:3001/api/users/${userId}`, {
+      const response = await fetch(api(`/api/users/${userId}`), {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -133,7 +134,7 @@ const SupporterSettings = () => {
       const token = localStorage.getItem("kamp_token");
       const userId = JSON.parse(localStorage.getItem("kamp_user") || "{}").id;
       
-      const response = await fetch(`http://localhost:3001/api/users/${userId}/password`, {
+      const response = await fetch(api(`/api/users/${userId}/password`), {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -168,7 +169,7 @@ const SupporterSettings = () => {
       const token = localStorage.getItem("kamp_token");
       const userId = JSON.parse(localStorage.getItem("kamp_user") || "{}").id;
       
-      const response = await fetch(`http://localhost:3001/api/users/${userId}`, {
+      const response = await fetch(api(`/api/users/${userId}`), {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",

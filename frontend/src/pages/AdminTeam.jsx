@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { api } from "../config";
 import ConfirmationModal from "../components/ConfirmationModal";
 
 const AdminTeam = () => {
@@ -41,7 +42,7 @@ const AdminTeam = () => {
     try {
       setIsLoading(true);
       const token = localStorage.getItem("kamp_token");
-      const response = await fetch("http://localhost:3001/api/admin/members", {
+      const response = await fetch(api("/api/admin/members"), {
         headers: {
           "Authorization": `Bearer ${token}`
         }
@@ -100,8 +101,8 @@ const AdminTeam = () => {
     try {
       const token = localStorage.getItem("kamp_token");
       const url = editingMember 
-        ? `http://localhost:3001/api/admin/members/${editingMember._id}` 
-        : "http://localhost:3001/api/admin/members";
+        ? api(`/api/admin/members/${editingMember._id}`) 
+        : api("/api/admin/members");
       
       const method = editingMember ? "PUT" : "POST";
       
@@ -136,7 +137,7 @@ const AdminTeam = () => {
     setIsActionLoading(true);
     try {
       const token = localStorage.getItem("kamp_token");
-      const response = await fetch(`http://localhost:3001/api/admin/members/${id}`, {
+      const response = await fetch(api(`/api/admin/members/${id}`), {
         method: "DELETE",
         headers: {
           "Authorization": `Bearer ${token}`

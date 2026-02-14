@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Outlet, Link, useParams, useLocation } from "react-router-dom";
 import { Building2, LayoutDashboard, FolderKanban, Settings, ArrowLeft } from "lucide-react";
+import { api } from "../config";
 
 const OrgAdminLayout = () => {
   const { id } = useParams();
@@ -15,7 +16,7 @@ const OrgAdminLayout = () => {
   const fetchOrganization = async () => {
     try {
       const token = localStorage.getItem("adminToken") || localStorage.getItem("kamp_token");
-      const res = await fetch(`http://localhost:3001/api/admin/organizations/${id}`, {
+      const res = await fetch(api(`/api/admin/organizations/${id}`), {
         headers: { Authorization: `Bearer ${token}` },
       });
       if (res.ok) {

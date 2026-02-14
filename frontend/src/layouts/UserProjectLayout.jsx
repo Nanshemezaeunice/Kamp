@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useParams, Outlet, Link } from "react-router-dom";
 import { ArrowLeft, ExternalLink, AlertCircle } from "lucide-react";
+import { api } from "../config";
 
 const UserProjectLayout = () => {
   const { id } = useParams();
@@ -16,7 +17,7 @@ const UserProjectLayout = () => {
 
   const fetchProject = async () => {
     try {
-      const response = await fetch(`http://localhost:3001/api/projects/${id}`);
+      const response = await fetch(api(`/api/projects/${id}`));
       if (!response.ok) throw new Error("Project not found");
       const data = await response.json();
       setProject(data);

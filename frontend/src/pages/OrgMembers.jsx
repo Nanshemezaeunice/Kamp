@@ -105,7 +105,7 @@ const OrgMembers = () => {
     try {
       const token = localStorage.getItem("kamp_token");
       const url = editingMember 
-        ? `http://localhost:3001/api/organization/members/${editingMember._id}` 
+        ? api(`/api/organization/members/${editingMember._id}`) 
         : api("/api/organization/members");
       
       const method = editingMember ? "PUT" : "POST";
@@ -141,7 +141,7 @@ const OrgMembers = () => {
     setIsActionLoading(true);
     try {
       const token = localStorage.getItem("kamp_token");
-      const response = await fetch(`http://localhost:3001/api/organization/members/${id}`, {
+      const response = await fetch(api(`/api/organization/members/${id}`), {
         method: "DELETE",
         headers: {
           "Authorization": `Bearer ${token}`

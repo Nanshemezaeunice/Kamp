@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { api } from "../config";
 import { useParams, useOutletContext, useNavigate } from "react-router-dom";
 import { AlertTriangle, Ban, PauseCircle, CheckCircle, Trash2 } from "lucide-react";
 import ConfirmationModal from "../components/ConfirmationModal";
@@ -40,7 +41,7 @@ const OrgAdminSettings = () => {
         setLoading(true);
         try {
           const token = localStorage.getItem("adminToken") || localStorage.getItem("kamp_token");
-          const res = await fetch(`http://localhost:3001/api/admin/organizations/${id}/status`, {
+          const res = await fetch(api(`/api/admin/organizations/${id}/status`), {
             method: "PUT",
             headers: {
               "Content-Type": "application/json",
@@ -66,7 +67,7 @@ const OrgAdminSettings = () => {
     setLoading(true);
     try {
       const token = localStorage.getItem("adminToken") || localStorage.getItem("kamp_token");
-      const res = await fetch(`http://localhost:3001/api/admin/organizations/${id}/action`, {
+      const res = await fetch(api(`/api/admin/organizations/${id}/action`), {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -91,7 +92,7 @@ const OrgAdminSettings = () => {
     setLoading(true);
     try {
       const token = localStorage.getItem("adminToken") || localStorage.getItem("kamp_token");
-      const res = await fetch(`http://localhost:3001/api/admin/organizations/${id}/action`, {
+      const res = await fetch(api(`/api/admin/organizations/${id}/action`), {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -122,7 +123,7 @@ const OrgAdminSettings = () => {
         setLoading(true);
         try {
           const token = localStorage.getItem("adminToken") || localStorage.getItem("kamp_token");
-          const res = await fetch(`http://localhost:3001/api/admin/organizations/${id}/status`, {
+          const res = await fetch(api(`/api/admin/organizations/${id}/status`), {
             method: "PUT",
             headers: {
               "Content-Type": "application/json",
@@ -148,7 +149,7 @@ const OrgAdminSettings = () => {
     setLoading(true);
     try {
       const token = localStorage.getItem("adminToken") || localStorage.getItem("kamp_token");
-      const res = await fetch(`http://localhost:3001/api/admin/organizations/${id}`, {
+      const res = await fetch(api(`/api/admin/organizations/${id}`), {
         method: "DELETE",
         headers: { Authorization: `Bearer ${token}` },
       });

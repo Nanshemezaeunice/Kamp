@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { api } from "../config";
 import { useParams, Link, useOutletContext } from "react-router-dom";
 import { FolderKanban, Calendar, DollarSign, Users, ExternalLink, FileText, Clock, CheckCircle, XCircle, Eye } from "lucide-react";
 
@@ -22,7 +23,7 @@ const OrgAdminProjects = () => {
   const fetchProjects = async () => {
     try {
       const token = localStorage.getItem("adminToken") || localStorage.getItem("kamp_token");
-      const res = await fetch(`http://localhost:3001/api/admin/organizations/${id}/projects`, {
+      const res = await fetch(api(`/api/admin/organizations/${id}/projects`), {
         headers: { Authorization: `Bearer ${token}` },
       });
       if (res.ok) {
@@ -38,7 +39,7 @@ const OrgAdminProjects = () => {
 
   const fetchApplications = async () => {
     try {
-      const res = await fetch(`http://localhost:3001/api/applications/user/${userId}`);
+      const res = await fetch(api(`/api/applications/user/${userId}`));
       if (res.ok) {
         const data = await res.json();
         setApplications(data.filter(app => app.applicantType === "organization"));

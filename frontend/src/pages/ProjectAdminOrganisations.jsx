@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { api } from "../config";
 import { useOutletContext } from "react-router-dom";
 import { Building2, Mail, Clock, CheckCircle, XCircle, Eye } from "lucide-react";
 import ConfirmationModal from "../components/ConfirmationModal";
@@ -18,7 +19,7 @@ const ProjectAdminOrganisations = () => {
 
   const fetchApplications = async () => {
     try {
-      const res = await fetch(`http://localhost:3001/api/applications/project/${project._id}`);
+      const res = await fetch(api(`/api/applications/project/${project._id}`));
       if (res.ok) {
         const data = await res.json();
         setApplications(data.filter(app => app.applicantType === "organization"));
@@ -33,7 +34,7 @@ const ProjectAdminOrganisations = () => {
   const handleStatusUpdate = async (appId, status, reason = "") => {
     setIsActionLoading(true);
     try {
-      const res = await fetch(`http://localhost:3001/api/applications/${appId}`, {
+      const res = await fetch(api(`/api/applications/${appId}`), {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ 

@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { api } from "../config";
 import { Link } from "react-router-dom";
 import { Building2, CheckCircle, Clock, XCircle, Ban, PauseCircle, Trash2, ExternalLink } from "lucide-react";
 import ConfirmationModal from "../components/ConfirmationModal";
@@ -45,7 +46,7 @@ const AdminOrganisations = () => {
         return;
       }
       
-      const res = await fetch("http://localhost:3001/api/admin/organizations", {
+      const res = await fetch(api("/api/admin/organizations"), {
         headers: { Authorization: `Bearer ${token}` },
       });
       
@@ -75,7 +76,7 @@ const AdminOrganisations = () => {
       async () => {
         try {
           const token = localStorage.getItem("adminToken") || localStorage.getItem("kamp_token");
-          const res = await fetch(`http://localhost:3001/api/admin/organizations/${orgId}/status`, {
+          const res = await fetch(api(`/api/admin/organizations/${orgId}/status`), {
             method: "PUT",
             headers: {
               "Content-Type": "application/json",
@@ -105,7 +106,7 @@ const AdminOrganisations = () => {
       async () => {
         try {
           const token = localStorage.getItem("adminToken") || localStorage.getItem("kamp_token");
-          const res = await fetch(`http://localhost:3001/api/admin/organizations/${orgId}/status`, {
+          const res = await fetch(api(`/api/admin/organizations/${orgId}/status`), {
             method: "PUT",
             headers: {
               "Content-Type": "application/json",
@@ -135,7 +136,7 @@ const AdminOrganisations = () => {
       async () => {
         try {
           const token = localStorage.getItem("adminToken") || localStorage.getItem("kamp_token");
-          const res = await fetch(`http://localhost:3001/api/admin/organizations/${orgId}`, {
+          const res = await fetch(api(`/api/admin/organizations/${orgId}`), {
             method: "DELETE",
             headers: { Authorization: `Bearer ${token}` },
           });

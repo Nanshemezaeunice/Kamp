@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { api } from "../config";
 import { Building2, User, Mail, Clock, CheckCircle, XCircle, ExternalLink, Eye } from "lucide-react";
 import ConfirmationModal from "../components/ConfirmationModal";
 
@@ -19,7 +20,7 @@ const AdminApplications = () => {
 
   const fetchApplications = async () => {
     try {
-      const response = await fetch("http://localhost:3001/api/applications");
+      const response = await fetch(api("/api/applications"));
       const data = await response.json();
       setApplications(data);
     } catch (err) {
@@ -32,7 +33,7 @@ const AdminApplications = () => {
   const handleStatusUpdate = async (id, newStatus, reason = "") => {
     setIsActionLoading(true);
     try {
-      const response = await fetch(`http://localhost:3001/api/applications/${id}`, {
+      const response = await fetch(api(`/api/applications/${id}`), {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ 

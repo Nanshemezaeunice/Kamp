@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Outlet, Link, useParams, useLocation } from "react-router-dom";
 import { Users, LayoutDashboard, Settings, ArrowLeft, FolderKanban } from "lucide-react";
+import { api } from "../config";
 
 const SupporterAdminLayout = () => {
   const { id } = useParams();
@@ -15,7 +16,7 @@ const SupporterAdminLayout = () => {
   const fetchSupporter = async () => {
     try {
       const token = localStorage.getItem("adminToken") || localStorage.getItem("kamp_token");
-      const res = await fetch(`http://localhost:3001/api/admin/supporters/${id}`, {
+      const res = await fetch(api(`/api/admin/supporters/${id}`), {
         headers: { Authorization: `Bearer ${token}` },
       });
       if (res.ok) {

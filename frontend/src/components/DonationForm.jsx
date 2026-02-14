@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { api } from "../config";
 
 const DonationForm = ({ project, onComplete, onCancel }) => {
   const [donorType, setDonorType] = useState("Individual");
@@ -37,7 +38,7 @@ const DonationForm = ({ project, onComplete, onCancel }) => {
       : { name: formData.orgName, email: formData.email, password: formData.password, type: "Organization" };
 
     try {
-      const response = await fetch(`http://localhost:3001/api/auth/${endpoint}`, {
+      const response = await fetch(api(`/api/auth/${endpoint}`), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
@@ -71,7 +72,7 @@ const DonationForm = ({ project, onComplete, onCancel }) => {
     setError("");
 
     try {
-      const response = await fetch("http://localhost:3001/api/donations", {
+      const response = await fetch(api("/api/donations"), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

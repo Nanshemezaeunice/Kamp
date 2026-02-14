@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { api } from "../config";
 
 const AdminDashboard = () => {
   const [projects, setProjects] = useState([]);
@@ -10,8 +11,8 @@ const AdminDashboard = () => {
     const fetchData = async () => {
       try {
         const [projRes, appRes] = await Promise.all([
-          fetch("http://localhost:3001/api/projects"),
-          fetch("http://localhost:3001/api/applications")
+          fetch(api("/api/projects")),
+          fetch(api("/api/applications"))
         ]);
         
         if (!projRes.ok) throw new Error("Failed to fetch projects");

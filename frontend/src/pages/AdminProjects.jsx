@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { api } from "../config";
 import { Link } from "react-router-dom";
 import CreateProjectModal from "../components/CreateProjectModal";
 import ConfirmationModal from "../components/ConfirmationModal";
@@ -53,7 +54,7 @@ const AdminProjects = () => {
   const fetchProjects = async () => {
     try {
       setIsLoading(true);
-      const response = await fetch("http://localhost:3001/api/projects", {
+      const response = await fetch(api("/api/projects"), {
         headers: {
           "Authorization": `Bearer ${token}`
         }
@@ -67,7 +68,7 @@ const AdminProjects = () => {
       const counts = {};
       await Promise.all(data.map(async (project) => {
         try {
-          const res = await fetch(`http://localhost:3001/api/applications/project/${project._id}/counts`);
+          const res = await fetch(api(`/api/applications/project/${project._id}/counts`));
           if (res.ok) {
             const count = await res.json();
             counts[project._id] = count;
@@ -84,7 +85,7 @@ const AdminProjects = () => {
 
   const handleApproveProject = async (projectId) => {
     try {
-      const response = await fetch(`http://localhost:3001/api/projects/${projectId}/approve`, {
+      const response = await fetch(api(`/api/projects/${projectId}/approve`), {
         method: "PUT",
         headers: {
           "Authorization": `Bearer ${token}`
@@ -101,7 +102,7 @@ const AdminProjects = () => {
 
   const handleRejectProject = async (projectId) => {
     try {
-      const response = await fetch(`http://localhost:3001/api/projects/${projectId}/reject`, {
+      const response = await fetch(api(`/api/projects/${projectId}/reject`), {
         method: "PUT",
         headers: {
           "Authorization": `Bearer ${token}`
@@ -134,7 +135,7 @@ const AdminProjects = () => {
   const handleDeleteProject = async (projectId) => {
     setIsActionLoading(true);
     try {
-      const response = await fetch(`http://localhost:3001/api/projects/${projectId}`, {
+      const response = await fetch(api(`/api/projects/${projectId}`), {
         method: "DELETE",
       });
       if (response.ok) {
@@ -153,7 +154,7 @@ const AdminProjects = () => {
 
   const handleCreateProject = async (newProjectData) => {
     try {
-      const response = await fetch("http://localhost:3001/api/projects", {
+      const response = await fetch(api("/api/projects"), {
         method: "POST",
         headers: { 
           "Content-Type": "application/json",

@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { api } from "../config";
 import { Link } from "react-router-dom";
 import { Users, CheckCircle, Clock, XCircle, Ban, PauseCircle, Trash2, ExternalLink } from "lucide-react";
 import ConfirmationModal from "../components/ConfirmationModal";
@@ -31,7 +32,7 @@ const AdminSupporters = () => {
   const fetchSupporters = async () => {
     try {
       const token = localStorage.getItem("adminToken") || localStorage.getItem("kamp_token");
-      const res = await fetch("http://localhost:3001/api/admin/supporters", {
+      const res = await fetch(api("/api/admin/supporters"), {
         headers: { Authorization: `Bearer ${token}` },
       });
       if (res.ok) {
@@ -54,7 +55,7 @@ const AdminSupporters = () => {
       async () => {
         try {
           const token = localStorage.getItem("adminToken") || localStorage.getItem("kamp_token");
-          const res = await fetch(`http://localhost:3001/api/admin/supporters/${supporterId}/status`, {
+          const res = await fetch(api(`/api/admin/supporters/${supporterId}/status`), {
             method: "PUT",
             headers: {
               "Content-Type": "application/json",
@@ -83,7 +84,7 @@ const AdminSupporters = () => {
       async () => {
         try {
           const token = localStorage.getItem("adminToken") || localStorage.getItem("kamp_token");
-          const res = await fetch(`http://localhost:3001/api/admin/supporters/${supporterId}/status`, {
+          const res = await fetch(api(`/api/admin/supporters/${supporterId}/status`), {
             method: "PUT",
             headers: {
               "Content-Type": "application/json",
@@ -112,7 +113,7 @@ const AdminSupporters = () => {
       async () => {
         try {
           const token = localStorage.getItem("adminToken") || localStorage.getItem("kamp_token");
-          const res = await fetch(`http://localhost:3001/api/admin/supporters/${supporterId}`, {
+          const res = await fetch(api(`/api/admin/supporters/${supporterId}`), {
             method: "DELETE",
             headers: { Authorization: `Bearer ${token}` },
           });

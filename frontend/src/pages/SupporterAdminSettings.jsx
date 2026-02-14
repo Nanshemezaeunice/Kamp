@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { api } from "../config";
 import { useParams, useOutletContext, useNavigate } from "react-router-dom";
 import { AlertTriangle, Ban, PauseCircle, CheckCircle, Trash2 } from "lucide-react";
 import ConfirmationModal from "../components/ConfirmationModal";
@@ -34,7 +35,7 @@ const SupporterAdminSettings = () => {
     setLoading(true);
     try {
       const token = localStorage.getItem("adminToken") || localStorage.getItem("kamp_token");
-      const res = await fetch(`http://localhost:3001/api/admin/supporters/${id}/status`, {
+      const res = await fetch(api(`/api/admin/supporters/${id}/status`), {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -60,7 +61,7 @@ const SupporterAdminSettings = () => {
     setLoading(true);
     try {
       const token = localStorage.getItem("adminToken") || localStorage.getItem("kamp_token");
-      const res = await fetch(`http://localhost:3001/api/admin/supporters/${id}/action`, {
+      const res = await fetch(api(`/api/admin/supporters/${id}/action`), {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -87,7 +88,7 @@ const SupporterAdminSettings = () => {
     setLoading(true);
     try {
       const token = localStorage.getItem("adminToken") || localStorage.getItem("kamp_token");
-      const res = await fetch(`http://localhost:3001/api/admin/supporters/${id}/action`, {
+      const res = await fetch(api(`/api/admin/supporters/${id}/action`), {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -112,7 +113,7 @@ const SupporterAdminSettings = () => {
     setLoading(true);
     try {
       const token = localStorage.getItem("adminToken") || localStorage.getItem("kamp_token");
-      const res = await fetch(`http://localhost:3001/api/admin/supporters/${id}/status`, {
+      const res = await fetch(api(`/api/admin/supporters/${id}/status`), {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -136,7 +137,7 @@ const SupporterAdminSettings = () => {
     setLoading(true);
     try {
       const token = localStorage.getItem("adminToken") || localStorage.getItem("kamp_token");
-      const res = await fetch(`http://localhost:3001/api/admin/supporters/${id}`, {
+      const res = await fetch(api(`/api/admin/supporters/${id}`), {
         method: "DELETE",
         headers: { Authorization: `Bearer ${token}` },
       });

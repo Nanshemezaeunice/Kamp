@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { X, Send } from "lucide-react";
+import { api } from "../config";
 
 const ApplyProjectModal = ({ project, onClose, onSuccess }) => {
   const [involvementType, setInvolvementType] = useState("Other");
@@ -36,7 +37,7 @@ const ApplyProjectModal = ({ project, onClose, onSuccess }) => {
         return;
       }
 
-      const res = await fetch("http://localhost:3001/api/applications", {
+      const res = await fetch(api("/api/applications"), {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useParams, NavLink, Outlet, Link, useNavigate } from "react-router-dom";
 import { LayoutDashboard, Users, ArrowLeft, ExternalLink, Settings, Building2, Heart } from "lucide-react";
+import { api } from "../config";
 
 const ProjectAdminLayout = () => {
   const { id } = useParams();
@@ -13,8 +14,8 @@ const ProjectAdminLayout = () => {
     const fetchProjectAndCounts = async () => {
       try {
         const [projRes, countsRes] = await Promise.all([
-          fetch(`http://localhost:3001/api/projects/${id}`),
-          fetch(`http://localhost:3001/api/applications/project/${id}/unresponded-counts`)
+          fetch(api(`/api/projects/${id}`)),
+          fetch(api(`/api/applications/project/${id}/unresponded-counts`))
         ]);
 
         if (!projRes.ok) throw new Error("Project not found");
@@ -150,7 +151,7 @@ const ProjectAdminLayout = () => {
           project, 
           setProject, 
           refreshCounts: () => {
-            fetch(`http://localhost:3001/api/applications/project/${id}/unresponded-counts`)
+            fetch(api(`/api/applications/project/${id}/unresponded-counts`))
               .then(res => res.json())
               .then(data => setCounts(data));
           } 

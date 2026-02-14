@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { X, Send, Building2, User, Mail, Phone, MessageSquare } from "lucide-react";
+import { api } from "../config";
 
 const NGOApplicationModal = ({ isOpen, onClose, projectId, projectTitle }) => {
   const [formData, setFormData] = useState({
@@ -24,7 +25,7 @@ const NGOApplicationModal = ({ isOpen, onClose, projectId, projectTitle }) => {
     setError("");
 
     try {
-      const response = await fetch("http://localhost:3001/api/applications", {
+      const response = await fetch(api("/api/applications"), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ ...formData, projectId }),
