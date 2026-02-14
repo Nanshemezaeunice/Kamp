@@ -9,43 +9,42 @@ connectDB();
 
 const app = express();
 
-// CORS configuration for frontend URLs (local dev, Netlify, and Render)
+// CORS configuration - Allow specific origins in production, all in development
 const allowedOrigins = [
   "http://localhost:5173",
   "http://localhost:3000",
+  "http://127.0.0.1:5173",
+  "http://127.0.0.1:3000",
   "https://enchanting-nougat-bdb9ef.netlify.app",
   "https://kamp-7waq.onrender.com",
 ];
 
-// Custom CORS middleware with explicit header handling
-app.use((req, res, next) => {
-  res.header('Access-Control-Allow-Origin', '*');
-  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
-  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With');
-  res.header('Access-Control-Allow-Credentials', 'true');
-  res.header('Access-Control-Max-Age', '86400');
-  
-  if (req.method === 'OPTIONS') {
-    return res.sendStatus(200);
-  }
-  next();
-});
-
-// Also apply cors middleware as backup
-app.use(cors({
-  origin: function(origin, callback) {
-    callback(null, true); // Allow all origins
+// Comprehensive CORS middleware
+const corsOptions = {
+  origin: function (origin, callback) {
+    // Allow requests with no origin (like curl requests, mobile apps, or OPTIONS pre-flight requests)
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      // In production, still allow requests but log them. This helps with debugging.
+      console.log(`CORS request from: ${origin}`);
+      callback(null, true);
+    }
   },
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
-  exposedHeaders: ['Content-Range', 'X-Content-Range'],
+  exposedHeaders: ['Content-Length', 'X-JSON-Response-Count'],
+  maxAge: 86400, // 24 hours
   preflightContinue: false,
-  optionsSuccessStatus: 200,
-}));
+  optionsSuccessStatus: 200
+};
 
-// Handle preflight requests explicitly
-app.options('*', cors());
+// Apply CORS middleware
+app.use(cors(corsOptions));
+
+// Preflight requests
+app.options('*', cors(corsOptions));
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));

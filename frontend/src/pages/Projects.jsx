@@ -5,7 +5,7 @@ import ProjectInfoModal from "../components/ProjectInfoModal";
 import ApplyProjectModal from "../components/ApplyProjectModal";
 import CreateProjectModal from "../components/CreateProjectModal";
 import { Plus } from "lucide-react";
-import { api } from "../config";
+import { api, apiFetch } from "../config";
 
 const Projects = () => {
   const [projects, setProjects] = useState([]);
@@ -34,19 +34,14 @@ const Projects = () => {
   const fetchProjects = async () => {
     try {
       const url = api("/api/projects");
-      console.log("Fetching from:", url); // Debug log
-      const response = await fetch(url, {
+      const response = await apiFetch(url, {
         headers: token ? { Authorization: `Bearer ${token}` } : {},
-        method: "GET",
       });
-      if (!response.ok) {
-        throw new Error(`Server error: ${response.status} ${response.statusText}`);
-      }
       const data = await response.json();
       setProjects(data);
     } catch (err) {
-      console.error("Fetch error:", err); // Debug log
-      setError(err.message);
+      console.error("Fetch error:", err);
+      setError(err.message || "Failed to load projects");
     } finally {
       setLoading(false);
     }
@@ -54,7 +49,8 @@ const Projects = () => {
 
   const fetchMyApplications = async () => {
     try {
-      const res = await fetch(api("/api/applications/my-applications"), {
+      const url = api("/api/applications/my-applications");
+      const res = await apiFetch(url, {
         headers: { Authorization: `Bearer ${token}` },
       });
       if (res.ok) {
@@ -63,7 +59,9 @@ const Projects = () => {
         data.forEach((a) => { map[a.projectId?._id || a.projectId] = a.status; });
         setAppliedMap(map);
       }
-    } catch { /* ignore */ }
+    } catch (err) {
+      console.error("Error fetching applications:", err);
+    }
   };
 
   const handleCardClick = (project) => {
