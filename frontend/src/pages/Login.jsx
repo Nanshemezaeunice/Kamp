@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { api } from "../config";
+import { api, apiFetch } from "../config";
 import { Link, useNavigate } from "react-router-dom";
 import { Eye, EyeOff, AlertCircle, CheckCircle } from "lucide-react";
 
@@ -19,9 +19,8 @@ const Login = () => {
     setError("");
     setLoading(true);
     try {
-      const res = await fetch(api("/api/auth/login"), {
+      const res = await apiFetch(api("/api/auth/login"), {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
       });
       const data = await res.json();
@@ -54,8 +53,15 @@ const Login = () => {
       } else {
         navigate(`/${rolePath}/dashboard`);
       }
-    } catch {
-      setError("Network error. Please try again.");
+    } catch (err) {
+      console.error("Login error:", err);
+      if (err.message.includes("Failed to fetch")) {
+        setError("Cannot connect to server. Check your internet connection and try again.");
+      } else if (err.message.includes("CORS")) {
+        setError("Server connection error. Please try again later.");
+      } else {
+        setError(err.message || "Network error. Please try again.");
+      }
     } finally {
       setLoading(false);
     }

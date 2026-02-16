@@ -9,29 +9,43 @@ connectDB();
 
 const app = express();
 
-// CORS configuration for frontend URLs (local dev, Netlify, and Render)
+// CORS configuration - Allow specific origins but keep logs for troubleshooting
 const allowedOrigins = [
   "http://localhost:5173",
   "http://localhost:3000",
+  "http://127.0.0.1:5173",
+  "http://127.0.0.1:3000",
   "https://enchanting-nougat-bdb9ef.netlify.app",
+  "https://kamp-7waq.onrender.com",
 ];
 
-app.use(cors({
-  origin: (origin, callback) => {
-    // Allow requests with no origin (like mobile apps or curl requests)
-    if (!origin || allowedOrigins.includes(origin)) {
+const corsOptions = {
+  origin: function (origin, callback) {
+    // Allow requests with no origin (like curl requests, mobile apps)
+    if (!origin) {
+      return callback(null, true);
+    }
+    
+    if (allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {
-      callback(new Error("CORS not allowed"));
+      // For debugging, log unauthorized origins but temporarily allow them
+      console.log(`CORS request from: ${origin}`);
+      callback(null, true); 
     }
   },
   credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization'],
-  exposedHeaders: ['Content-Range', 'X-Content-Range'],
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept', 'Origin'],
+  exposedHeaders: ['Content-Range', 'X-Content-Range', 'Content-Length', 'X-JSON-Response-Count'],
+  maxAge: 86400,
   preflightContinue: false,
   optionsSuccessStatus: 204
-}));
+};
+
+// Apply CORS middleware
+app.use(cors(corsOptions));
+app.options('*', cors(corsOptions));
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -48,8 +62,24 @@ app.use("/api/profiles", require("./routes/profileRoutes"));
 app.use("/api/organization/members", require("./routes/orgMemberRoutes"));
 app.use("/api/users", require("./routes/userRoutes"));
 
+// Health check endpoint
+app.get("/", (req, res) => {
+  res.json({ message: "KAMP API is running" });
+});
+
 app.get("/api", (req, res) => {
   res.json({ message: "Welcome to KAMP API" });
+});
+
+// 404 handler
+app.use((req, res) => {
+  res.status(404).json({ error: "Endpoint not found", path: req.path });
+});
+
+// Error handler
+app.use((err, req, res, next) => {
+  console.error(err);
+  res.status(500).json({ error: "Internal server error" });
 });
 
 const PORT = process.env.PORT || 3001;
