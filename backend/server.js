@@ -15,8 +15,7 @@ const allowedOrigins = [
   "http://localhost:3000",
   "http://127.0.0.1:5173",
   "http://127.0.0.1:3000",
-  "https://enchanting-nougat-bdb9ef.netlify.app",
-  "https://kamp-7waq.onrender.com",
+  "https://voluble-chimera-ae1d21.netlify.app",
 ];
 
 const corsOptions = {
