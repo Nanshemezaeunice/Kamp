@@ -33,7 +33,7 @@ const ProjectInfoModal = ({ project, onClose, onApply, onDonate, hasApplied, app
           <div className="absolute bottom-0 inset-x-0 bg-linear-to-t from-black/60 to-transparent p-4">
             <h2 className="text-xl font-bold text-white">{project.name}</h2>
             <p className="text-white/80 text-sm">
-              {project.ngos?.length > 0 ? project.ngos.join(", ") : "KAMP Project"}
+              {project.ngos?.length > 0 ? project.ngos.join(", ") : project.partners?.length > 0 ? project.partners.join(", ") : "KAMP Project"}
             </p>
           </div>
         </div>

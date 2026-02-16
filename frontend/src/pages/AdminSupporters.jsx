@@ -40,7 +40,7 @@ const AdminSupporters = () => {
         setSupporters(data);
       }
     } catch (error) {
-      console.error("Error fetching supporters:", error);
+      console.error("Error fetching advocates:", error);
     } finally {
       setLoading(false);
     }
@@ -49,9 +49,9 @@ const AdminSupporters = () => {
   const handleVerify = async (supporterId) => {
     openConfirmModal(
       "success-action",
-      "Verify Supporter",
-      "Are you sure you want to verify this supporter? This will grant them full access to the platform features.",
-      "Verify Supporter",
+      "Verify Advocate",
+      "Are you sure you want to verify this advocate? This will grant them full access to the platform features.",
+      "Verify Advocate",
       async () => {
         try {
           const token = localStorage.getItem("adminToken") || localStorage.getItem("kamp_token");
@@ -69,7 +69,7 @@ const AdminSupporters = () => {
             setModalOpen(false);
           }
         } catch (error) {
-          console.error("Error verifying supporter:", error);
+          console.error("Error verifying advocate:", error);
         }
       }
     );
@@ -78,9 +78,9 @@ const AdminSupporters = () => {
   const handleReject = async (supporterId) => {
     openConfirmModal(
       "warning",
-      "Reject Supporter",
-      "Are you sure you want to reject this supporter's application? They will be notified accordingly.",
-      "Reject Supporter",
+      "Reject Advocate",
+      "Are you sure you want to reject this advocate's application? They will be notified accordingly.",
+      "Reject Advocate",
       async () => {
         try {
           const token = localStorage.getItem("adminToken") || localStorage.getItem("kamp_token");
@@ -98,7 +98,7 @@ const AdminSupporters = () => {
             setModalOpen(false);
           }
         } catch (error) {
-          console.error("Error rejecting supporter:", error);
+          console.error("Error rejecting advocate:", error);
         }
       }
     );
@@ -107,8 +107,8 @@ const AdminSupporters = () => {
   const handleDelete = async (supporterId) => {
     openConfirmModal(
       "danger",
-      "Delete Supporter",
-      "This action is permanent and cannot be undone. All data for this supporter will be removed.",
+      "Delete Advocate",
+      "This action is permanent and cannot be undone. All data for this advocate will be removed.",
       "Delete Permanently",
       async () => {
         try {
@@ -123,7 +123,7 @@ const AdminSupporters = () => {
             setModalOpen(false);
           }
         } catch (error) {
-          console.error("Error deleting supporter:", error);
+          console.error("Error deleting advocate:", error);
         }
       }
     );
@@ -173,8 +173,8 @@ const AdminSupporters = () => {
             <Users className="w-5 h-5 text-blue-600" />
           </div>
           <div>
-            <h1 className="text-2xl font-bold text-gray-900">Community Supporters</h1>
-            <p className="text-sm text-gray-500">Manage and verify registered supporters</p>
+            <h1 className="text-2xl font-bold text-gray-900">Community Advocates</h1>
+            <p className="text-sm text-gray-500">Manage and verify registered advocates</p>
           </div>
         </div>
       </div>
@@ -265,7 +265,7 @@ const AdminSupporters = () => {
               {filteredSupporters.length === 0 ? (
                 <tr>
                   <td colSpan="6" className="px-6 py-12 text-center text-gray-500">
-                    No supporters found
+                    No advocates found
                   </td>
                 </tr>
               ) : (

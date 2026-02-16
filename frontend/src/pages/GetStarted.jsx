@@ -150,14 +150,14 @@ const GetStarted = () => {
               Choose your role to get started on the right path.
             </p>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-3xl mx-auto">
-              {/* NGO Card */}
+              {/* Organisation Card */}
               <button
                 onClick={() => setRole("ngo")}
                 className="p-8 rounded-xl border-2 border-gray-200 hover:border-blue-500 hover:shadow-lg transition text-left cursor-pointer bg-white overflow-hidden flex flex-col"
               >
                 <img
                   src="https://images.unsplash.com/photo-1552664730-d307ca884978?w=400&h=250&fit=crop"
-                  alt="NGO"
+                  alt="Organisation"
                   className="w-full h-40 object-cover rounded mb-4"
                 />
                 <h3 className="text-xl font-bold text-gray-800 mb-2">
@@ -169,22 +169,22 @@ const GetStarted = () => {
                 </p>
               </button>
 
-              {/* Supporter Card */}
+              {/* Advocate Card */}
               <button
                 onClick={() => setRole("supporter")}
                 className="p-8 rounded-xl border-2 border-gray-200 hover:border-blue-500 hover:shadow-lg transition text-left cursor-pointer bg-white overflow-hidden flex flex-col"
               >
                 <img
                   src="https://images.unsplash.com/photo-1469169504649-88b996d3dd5f?w=400&h=250&fit=crop"
-                  alt="Supporter"
+                  alt="Advocate"
                   className="w-full h-40 object-cover rounded mb-4"
                 />
                 <h3 className="text-xl font-bold text-gray-800 mb-2">
-                  I&apos;m a Community Supporter
+                  I&apos;m an Advocate
                 </h3>
                 <p className="text-gray-600 text-sm">
-                  Browse projects, make donations, volunteer, and track how
-                  your support makes a real impact.
+                  Browse projects, create initiatives, make donations, volunteer,
+                  and track how your support makes a real impact.
                 </p>
               </button>
             </div>
@@ -192,15 +192,15 @@ const GetStarted = () => {
         </section>
       )}
 
-      {/* ═══════════ NGO Registration Form ═══════════ */}
+      {/* ═══════════ Organisation Registration Form ═══════════ */}
       {role === "ngo" && (
         <section className="py-20 bg-white">
           <div className="max-w-2xl mx-auto px-4">
             <button onClick={() => setRole(null)} className="text-blue-600 font-medium mb-6 inline-block hover:underline cursor-pointer">
               ← Back to role selection
             </button>
-            <h2 className="text-2xl font-bold text-gray-800 mb-2">NGO Registration</h2>
-            <p className="text-gray-600 mb-8">Fill in your organization details to apply for access.</p>
+            <h2 className="text-2xl font-bold text-gray-800 mb-2">Organisation Registration</h2>
+            <p className="text-gray-600 mb-8">Fill in your organisation details to apply for access.</p>
 
             {ngoError && (
               <div className="mb-6 bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm">{ngoError}</div>
@@ -278,15 +278,15 @@ const GetStarted = () => {
         </section>
       )}
 
-      {/* ═══════════ Community Supporter Registration ═══════════ */}
+      {/* ═══════════ Advocate Registration ═══════════ */}
       {role === "supporter" && (
         <section className="py-20 bg-white">
           <div className="max-w-2xl mx-auto px-4">
             <button onClick={() => setRole(null)} className="text-blue-600 font-medium mb-6 inline-block hover:underline cursor-pointer">
               ← Back to role selection
             </button>
-            <h2 className="text-2xl font-bold text-gray-800 mb-2">Community Supporter Sign Up</h2>
-            <p className="text-gray-600 mb-8">Create an account to support projects transparently.</p>
+            <h2 className="text-2xl font-bold text-gray-800 mb-2">Advocate Sign Up</h2>
+            <p className="text-gray-600 mb-8">Create an account to advocate for projects and make a real impact.</p>
 
             {indError && (
               <div className="mb-6 bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm">{indError}</div>

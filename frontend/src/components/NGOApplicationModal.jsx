@@ -71,7 +71,7 @@ const NGOApplicationModal = ({ isOpen, onClose, projectId, projectTitle }) => {
           </button>
           <div className="flex items-center gap-3 mb-2">
             <Building2 className="w-8 h-8" />
-            <h2 className="text-2xl font-bold">NGO Partnership</h2>
+            <h2 className="text-2xl font-bold">Organisation Partnership</h2>
           </div>
           <p className="text-amber-100 italic">Project: {projectTitle}</p>
         </div>

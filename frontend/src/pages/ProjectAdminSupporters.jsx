@@ -22,7 +22,7 @@ const ProjectAdminSupporters = () => {
       const res = await fetch(api(`/api/applications/project/${project._id}`));
       if (res.ok) {
         const data = await res.json();
-        setApplications(data.filter(app => app.applicantType === "supporter"));
+        setApplications(data.filter(app => app.applicantType === "advocate"));
       }
     } catch (err) {
       console.error("Error fetching applications:", err);
@@ -88,9 +88,9 @@ const ProjectAdminSupporters = () => {
     <div className="space-y-8 animate-fadeIn">
       <div className="flex justify-between items-center">
         <div>
-          <h2 className="text-2xl font-bold text-slate-900">Supporter Applications</h2>
+          <h2 className="text-2xl font-bold text-slate-900">Advocate Applications</h2>
           <p className="text-sm text-slate-500 font-medium">
-            {applications.length} supporter{applications.length !== 1 ? 's' : ''} applied for this project
+            {applications.length} advocate{applications.length !== 1 ? 's' : ''} applied for this project
           </p>
         </div>
       </div>
@@ -99,7 +99,7 @@ const ProjectAdminSupporters = () => {
         <div className="py-20 bg-slate-50 border-2 border-dashed border-slate-200 rounded-3xl flex flex-col items-center justify-center text-center">
           <Users className="w-12 h-12 text-slate-300 mb-4" />
           <p className="text-slate-500 font-bold uppercase text-[10px] tracking-widest">No applications yet</p>
-          <p className="text-sm text-slate-400 max-w-xs px-6">No supporters have applied to this project yet.</p>
+          <p className="text-sm text-slate-400 max-w-xs px-6">No advocates have applied to this project yet.</p>
         </div>
       ) : (
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -112,7 +112,7 @@ const ProjectAdminSupporters = () => {
                   </div>
                   <div>
                     <h3 className="font-black text-slate-800 uppercase tracking-tight">
-                      {app.userId?.name || "Unknown Supporter"}
+                      {app.userId?.name || "Unknown Advocate"}
                     </h3>
                     <p className="text-xs text-slate-500 font-bold uppercase tracking-widest">
                       {app.involvementType || "General Support"}
@@ -150,7 +150,7 @@ const ProjectAdminSupporters = () => {
                       onClick={() => openConfirmModal(
                         "success",
                         "Approve Application",
-                        `Approve ${app.userId?.name || "this supporter"} to join this project?`,
+                        `Approve ${app.userId?.name || "this advocate"} to join this project?`,
                         "Approve",
                         app._id,
                         "accepted"
@@ -169,7 +169,7 @@ const ProjectAdminSupporters = () => {
                       onClick={() => openConfirmModal(
                         "danger",
                         "Reject Application",
-                        `Reject ${app.userId?.name || "this supporter"}'s application? This action requires a reason.`,
+                        `Reject ${app.userId?.name || "this advocate"}'s application? This action requires a reason.`,
                         "Reject",
                         app._id,
                         "rejected",
@@ -187,7 +187,7 @@ const ProjectAdminSupporters = () => {
                       onClick={() => openConfirmModal(
                         "success",
                         "Approve Application",
-                        `Approve ${app.userId?.name || "this supporter"} to join this project?`,
+                        `Approve ${app.userId?.name || "this advocate"} to join this project?`,
                         "Approve",
                         app._id,
                         "accepted"
@@ -200,7 +200,7 @@ const ProjectAdminSupporters = () => {
                       onClick={() => openConfirmModal(
                         "danger",
                         "Reject Application",
-                        `Reject ${app.userId?.name || "this supporter"}'s application? This action requires a reason.`,
+                        `Reject ${app.userId?.name || "this advocate"}'s application? This action requires a reason.`,
                         "Reject",
                         app._id,
                         "rejected",

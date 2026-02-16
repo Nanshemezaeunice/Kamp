@@ -130,10 +130,10 @@ const Projects = () => {
           <h1 className="text-4xl font-bold mb-4">Projects</h1>
           <p className="text-blue-100 text-lg max-w-2xl mx-auto mb-8">
             Browse ongoing projects in Karamoja. Donate directly or apply as an
-            NGO to get involved and help manage project resources.
+            organisation or advocate to get involved and help manage project resources.
           </p>
           
-          {isLoggedIn && (user.type === "Organization" || user.type === "Supporter") && (
+          {isLoggedIn && (
             <button
               onClick={() => setShowCreateModal(true)}
               className="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-xl font-bold transition-all shadow-lg hover:shadow-blue-500/25"
@@ -167,7 +167,7 @@ const Projects = () => {
           ) : projects.length === 0 ? (
             <div className="text-center text-gray-600 py-20">
               <p className="text-xl font-semibold">No public projects available at the moment.</p>
-              <p className="mt-2 text-gray-500">Please check back later or start a new project if you're an NGO.</p>
+              <p className="mt-2 text-gray-500">Please check back later or start a new project.</p>
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -224,7 +224,7 @@ const Projects = () => {
                         <h3 className="text-xl font-bold text-gray-800 mb-2 line-clamp-1">{project.name}</h3>
                         <p className="text-gray-600 text-sm mb-3 line-clamp-2">{project.description}</p>
                         <p className="text-xs text-gray-500 mb-3 font-medium">
-                          By <span className="font-bold text-gray-700">{project.creatorId?._id === user?.id || project.creatorId === user?.id ? "Me (Project Head)" : (project.creatorId?.name || project.ngos?.join(", ") || "Unknown NGO")}</span>
+                          By <span className="font-bold text-gray-700">{project.creatorId?._id === user?.id || project.creatorId === user?.id ? "Me (Project Head)" : (project.creatorId?.name || project.ngos?.join(", ") || project.partners?.join(", ") || "KAMP")}</span>
                         </p>
                         {/* Progress */}
                         <div className="mb-1">
@@ -283,21 +283,21 @@ const Projects = () => {
         </div>
       </section>
 
-      {/* CTA for NGOs */}
+      {/* CTA for Organisations & Advocates */}
       <section className="py-16 bg-gray-50">
         <div className="max-w-3xl mx-auto px-4 text-center">
           <h2 className="text-3xl font-bold text-gray-900 mb-4">
-            Are You an NGO?
+            Want to Make a Difference?
           </h2>
           <p className="text-gray-600 text-lg mb-8">
-            Apply to get involved in existing projects or create your own.
+            Join as an organisation or advocate to get involved in existing projects or create your own.
             Manage funds, monitor progress, and bring real impact to Karamoja.
           </p>
           <Link
             to="/get-started"
             className="bg-blue-600 text-white px-10 py-3.5 rounded-full font-bold hover:bg-blue-700 transition-all transform hover:scale-105 shadow-md inline-block"
           >
-            Apply as an NGO
+            Get Started
           </Link>
         </div>
       </section>

@@ -23,7 +23,7 @@ const CreateProjectModal = ({
   isOpen, 
   onClose, 
   onCreate, 
-  verifiedNGOs = DEFAULT_NGOS, 
+  verifiedOrgs = DEFAULT_NGOS, 
   projectCategories = DEFAULT_CATEGORIES 
 }) => {
   const [currentStep, setCurrentStep] = useState(1);
@@ -115,7 +115,7 @@ const CreateProjectModal = ({
         <div className="bg-linear-to-r from-blue-700 to-indigo-800 p-6 text-white shrink-0">
           <div className="flex justify-between items-center mb-6">
             <div>
-              <h2 className="text-2xl font-bold tracking-tight">Deploy New Project</h2>
+              <h2 className="text-2xl font-bold tracking-tight">Create New Project</h2>
               <p className="text-blue-100 text-xs mt-0.5 opacity-80 font-medium tracking-wide">PHASE {currentStep} OF {steps.length}: {steps[currentStep-1].title.toUpperCase()}</p>
             </div>
             <button onClick={onClose} className="bg-white/10 p-2 rounded-full hover:bg-white/20 transition-all">
@@ -184,20 +184,21 @@ const CreateProjectModal = ({
                     </div>
 
                     <div className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm">
-                      <label className="block text-sm font-bold text-slate-700 mb-4 text-center">Deployment Partners</label>
+                      <label className="block text-sm font-bold text-slate-700 mb-4 text-center">Partner With</label>
+                      <p className="text-xs text-slate-400 text-center mb-3">Select registered & verified organisations to collaborate with</p>
                       <div className="flex flex-wrap justify-center gap-2">
-                        {verifiedNGOs?.map(ngo => (
+                        {verifiedOrgs?.map(org => (
                           <button
-                            key={ngo}
+                            key={org}
                             type="button"
-                            onClick={() => toggleSelection(newProject.ngos, ngo, 'ngos')}
+                            onClick={() => toggleSelection(newProject.ngos, org, 'ngos')}
                             className={`px-4 py-2.5 rounded-xl text-[11px] font-bold transition-all border ${
-                              newProject.ngos.includes(ngo)
+                              newProject.ngos.includes(org)
                                 ? "bg-emerald-600 text-white border-emerald-700 shadow-lg shadow-emerald-100"
                                 : "bg-slate-50 text-slate-500 border-slate-100 hover:bg-slate-100"
                             }`}
                           >
-                            {ngo}
+                            {org}
                           </button>
                         ))}
                       </div>
@@ -425,8 +426,26 @@ const CreateProjectModal = ({
                     </div>
 
                     <div className="bg-white p-8 rounded-3xl border border-slate-100 shadow-sm">
-                      <label className="block text-sm font-bold text-slate-700 mb-5 text-center">Engagement Settings</label>
+                      <label className="block text-sm font-bold text-slate-700 mb-5 text-center">Engagement & Visibility Settings</label>
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <button
+                          type="button"
+                          onClick={() => setNewProject({...newProject, isPublic: !newProject.isPublic})}
+                          className={`flex items-center justify-between p-5 rounded-2xl border-2 transition-all ${
+                            newProject.isPublic 
+                              ? "bg-violet-50 border-violet-500 text-violet-900" 
+                              : "bg-slate-50 border-slate-200 text-slate-400"
+                          }`}
+                        >
+                          <div className="text-left">
+                            <p className="text-sm font-black uppercase tracking-tight">{newProject.isPublic ? 'Public Project' : 'Private Project'}</p>
+                            <p className="text-[10px] font-bold opacity-70">{newProject.isPublic ? 'Visible to everyone' : 'Only visible to registered users'}</p>
+                          </div>
+                          <div className={`w-12 h-6 rounded-full relative transition-colors ${newProject.isPublic ? 'bg-violet-500' : 'bg-slate-300'}`}>
+                            <div className={`absolute top-1 w-4 h-4 bg-white rounded-full transition-all ${newProject.isPublic ? 'right-1' : 'left-1'}`} />
+                          </div>
+                        </button>
+
                         <button
                           type="button"
                           onClick={() => setNewProject({...newProject, isOpenForDonations: !newProject.isOpenForDonations})}
@@ -455,8 +474,8 @@ const CreateProjectModal = ({
                           }`}
                         >
                           <div className="text-left">
-                            <p className="text-sm font-black uppercase tracking-tight">NGO Collaboration</p>
-                            <p className="text-[10px] font-bold opacity-70">Allow other Orgs to apply</p>
+                            <p className="text-sm font-black uppercase tracking-tight">Organisation Collaboration</p>
+                            <p className="text-[10px] font-bold opacity-70">Allow other Organisations to apply</p>
                           </div>
                           <div className={`w-12 h-6 rounded-full relative transition-colors ${newProject.isOpenForOrganizations ? 'bg-blue-500' : 'bg-slate-300'}`}>
                             <div className={`absolute top-1 w-4 h-4 bg-white rounded-full transition-all ${newProject.isOpenForOrganizations ? 'right-1' : 'left-1'}`} />
@@ -499,7 +518,7 @@ const CreateProjectModal = ({
             onClick={currentStep === 1 ? onClose : () => setCurrentStep(currentStep - 1)}
             className="px-10 py-4 text-slate-400 hover:text-slate-600 font-black text-[11px] uppercase tracking-widest rounded-2xl hover:bg-slate-50 transition-all"
           >
-            {currentStep === 1 ? "Discard Deployment" : "Previous Stage"}
+            {currentStep === 1 ? "Discard" : "Previous Stage"}
           </button>
           
           <div className="flex items-center gap-4 flex-1 max-w-sm">
@@ -509,14 +528,14 @@ const CreateProjectModal = ({
             >
               {currentStep === 4 ? (
                 <>
-                  <span>Deploy to Live Platform</span>
+                  <span>Submit Project</span>
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M13 10V3L4 14h7v7l9-11h-7z" />
                   </svg>
                 </>
               ) : (
                 <>
-                  <span>Navigate to Next Phase</span>
+                  <span>Next Step</span>
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M17 8l4 4m0 0l-4 4m4-4H3" />
                   </svg>

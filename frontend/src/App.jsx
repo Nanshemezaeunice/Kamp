@@ -39,6 +39,9 @@ import OrgMyProjects from "./pages/OrgMyProjects";
 import SupporterMyProjects from "./pages/SupporterMyProjects";
 import UserProjectLayout from "./layouts/UserProjectLayout";
 import UserProjectOverview from "./pages/UserProjectOverview";
+import ProjectManageFinances from "./pages/ProjectManageFinances";
+import ProjectManageMilestones from "./pages/ProjectManageMilestones";
+import ProjectManageTeam from "./pages/ProjectManageTeam";
 import AdminProtectedRoute from "./components/AdminProtectedRoute";
 import OrgMembers from "./pages/OrgMembers";
 import OrgSettings from "./pages/OrgSettings";
@@ -131,6 +134,9 @@ const router = createBrowserRouter([
     element: <UserProjectLayout />,
     children: [
       { index: true, element: <UserProjectOverview /> },
+      { path: "finances", element: <ProjectManageFinances /> },
+      { path: "milestones", element: <ProjectManageMilestones /> },
+      { path: "team", element: <ProjectManageTeam /> },
     ],
   },
   // ─── Community Supporter ───
@@ -153,6 +159,9 @@ const router = createBrowserRouter([
     element: <UserProjectLayout />,
     children: [
       { index: true, element: <UserProjectOverview /> },
+      { path: "finances", element: <ProjectManageFinances /> },
+      { path: "milestones", element: <ProjectManageMilestones /> },
+      { path: "team", element: <ProjectManageTeam /> },
     ],
   },
 ]);

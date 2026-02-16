@@ -1,10 +1,11 @@
 import { useState, useEffect } from "react";
-import { useParams, Outlet, Link } from "react-router-dom";
-import { ArrowLeft, ExternalLink, AlertCircle } from "lucide-react";
+import { useParams, Outlet, Link, useLocation } from "react-router-dom";
+import { ArrowLeft, ExternalLink, AlertCircle, LayoutDashboard, Wallet, Target, Users } from "lucide-react";
 import { api } from "../config";
 
 const UserProjectLayout = () => {
   const { id } = useParams();
+  const location = useLocation();
   const [project, setProject] = useState(null);
   const [loading, setLoading] = useState(true);
   const [userType, setUserType] = useState("");
@@ -55,6 +56,19 @@ const UserProjectLayout = () => {
     ? "/organization/my-projects" 
     : "/supporter/my-projects";
 
+  const basePath = userType === "Organization"
+    ? `/organization/my-projects/${id}`
+    : `/supporter/my-projects/${id}`;
+
+  const tabs = [
+    { label: "Overview", path: "", icon: LayoutDashboard },
+    { label: "Finances", path: "/finances", icon: Wallet },
+    { label: "Milestones", path: "/milestones", icon: Target },
+    { label: "Team", path: "/team", icon: Users },
+  ];
+
+  const currentPath = location.pathname;
+
   return (
     <div className="min-h-screen bg-slate-50">
       {/* Header */}
@@ -75,7 +89,7 @@ const UserProjectLayout = () => {
                   {project.name}
                 </h1>
                 <p className="text-[10px] text-slate-500 font-bold uppercase tracking-widest hidden sm:block">
-                  Project Details
+                  Project Management
                 </p>
               </div>
             </div>
@@ -101,6 +115,32 @@ const UserProjectLayout = () => {
               </Link>
             </div>
           </div>
+
+          {/* Tab Navigation */}
+          <nav className="flex gap-1 -mb-px overflow-x-auto scrollbar-hide">
+            {tabs.map((tab) => {
+              const fullPath = basePath + tab.path;
+              const isActive = tab.path === ""
+                ? currentPath === basePath || currentPath === basePath + "/"
+                : currentPath.startsWith(fullPath);
+              const Icon = tab.icon;
+
+              return (
+                <Link
+                  key={tab.path}
+                  to={fullPath}
+                  className={`flex items-center gap-2 px-4 py-3 text-sm font-semibold border-b-2 whitespace-nowrap transition-colors ${
+                    isActive
+                      ? "border-blue-600 text-blue-600"
+                      : "border-transparent text-slate-500 hover:text-slate-700 hover:border-slate-300"
+                  }`}
+                >
+                  <Icon className="w-4 h-4" />
+                  {tab.label}
+                </Link>
+              );
+            })}
+          </nav>
         </div>
       </header>
 

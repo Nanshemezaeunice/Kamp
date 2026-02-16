@@ -47,7 +47,7 @@ const ApplyProjectModal = ({ project, onClose, onSuccess }) => {
           projectId: project._id,
           involvementType,
           message,
-          applicantType: user.type === "Organization" ? "organization" : "supporter",
+          applicantType: user.type === "Organization" ? "organization" : "advocate",
         }),
       });
 

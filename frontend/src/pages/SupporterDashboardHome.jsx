@@ -39,7 +39,7 @@ const SupporterDashboardHome = () => {
     <div>
       <div className="mb-8">
         <h1 className="text-2xl font-bold text-gray-800">
-          Welcome back, {user.name || "Supporter"}!
+          Welcome back, {user.name || "Advocate"}!
         </h1>
         <p className="text-gray-500 mt-1">
           Here&apos;s a snapshot of your activity on KAMP.

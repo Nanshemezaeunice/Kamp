@@ -179,10 +179,10 @@ const SupporterSettings = () => {
       });
 
       if (response.ok) {
-        setMessage({ type: "success", text: "Supporter details updated successfully!" });
+        setMessage({ type: "success", text: "Advocate details updated successfully!" });
       } else {
         const error = await response.json();
-        setMessage({ type: "error", text: error.message || "Failed to update supporter details" });
+        setMessage({ type: "error", text: error.message || "Failed to update advocate details" });
       }
     } catch (error) {
       setMessage({ type: "error", text: "Connection failed" });
@@ -194,14 +194,14 @@ const SupporterSettings = () => {
   const tabs = [
     { id: "profile", label: "Profile", icon: User },
     { id: "password", label: "Password", icon: Lock },
-    { id: "supporter", label: "Supporter Info", icon: Heart },
+    { id: "supporter", label: "Advocate Info", icon: Heart },
   ];
 
   return (
     <div className="p-4 lg:p-8">
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-gray-800 mb-2">Settings</h1>
-        <p className="text-gray-600">Manage your account and supporter preferences</p>
+        <p className="text-gray-600">Manage your account and advocate preferences</p>
       </div>
 
       <div className="bg-white rounded-xl shadow-sm border border-gray-100 mb-6">
@@ -265,7 +265,7 @@ const SupporterSettings = () => {
                   value={profileData.email}
                   onChange={(e) => setProfileData({ ...profileData, email: e.target.value })}
                   className="w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-lg outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent"
-                  placeholder="john@supporter.com"
+                  placeholder="john@advocate.com"
                 />
               </div>
             </div>
@@ -390,7 +390,7 @@ const SupporterSettings = () => {
             </div>
 
             <div>
-              <label className="block text-sm font-bold text-gray-700 mb-2">Supporter Type</label>
+              <label className="block text-sm font-bold text-gray-700 mb-2">Advocate Type</label>
               <select
                 value={supporterData.supporterType}
                 onChange={(e) => setSupporterData({ ...supporterData, supporterType: e.target.value })}
@@ -445,7 +445,7 @@ const SupporterSettings = () => {
                 disabled={loading}
                 className="bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 text-white px-8 py-3 rounded-lg font-semibold transition-all shadow-md"
               >
-                {loading ? "Updating..." : "Update Supporter Info"}
+                {loading ? "Updating..." : "Update Advocate Info"}
               </button>
             </div>
           </form>

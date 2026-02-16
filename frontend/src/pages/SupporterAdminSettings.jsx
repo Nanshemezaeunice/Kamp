@@ -49,7 +49,7 @@ const SupporterAdminSettings = () => {
         setModalOpen(false);
       }
     } catch (error) {
-      console.error("Error verifying supporter:", error);
+      console.error("Error verifying advocate:", error);
     } finally {
       setLoading(false);
     }
@@ -76,7 +76,7 @@ const SupporterAdminSettings = () => {
         setActionReason("");
       }
     } catch (error) {
-      console.error("Error banning supporter:", error);
+      console.error("Error banning advocate:", error);
     } finally {
       setLoading(false);
     }
@@ -103,7 +103,7 @@ const SupporterAdminSettings = () => {
         setActionReason("");
       }
     } catch (error) {
-      console.error("Error suspending supporter:", error);
+      console.error("Error suspending advocate:", error);
     } finally {
       setLoading(false);
     }
@@ -127,7 +127,7 @@ const SupporterAdminSettings = () => {
         setModalOpen(false);
       }
     } catch (error) {
-      console.error("Error reactivating supporter:", error);
+      console.error("Error reactivating advocate:", error);
     } finally {
       setLoading(false);
     }
@@ -150,7 +150,7 @@ const SupporterAdminSettings = () => {
         }, 100);
       }
     } catch (error) {
-      console.error("Error deleting supporter:", error);
+      console.error("Error deleting advocate:", error);
     } finally {
       setLoading(false);
     }
@@ -161,7 +161,7 @@ const SupporterAdminSettings = () => {
       <div>
         <h2 className="text-2xl font-bold text-gray-900 mb-2">Settings</h2>
         <p className="text-sm text-gray-500">
-          Manage supporter status and permissions
+          Manage advocate status and permissions
         </p>
       </div>
 
@@ -199,7 +199,7 @@ const SupporterAdminSettings = () => {
         <div className="bg-white rounded-xl border border-gray-200 p-6">
           <h3 className="text-lg font-semibold text-gray-900 mb-4">Verification</h3>
           <p className="text-sm text-gray-600 mb-4">
-            Verify this supporter to allow them full access to the platform.
+            Verify this advocate to allow them full access to the platform.
           </p>
           <button
             onClick={() => openConfirmModal(

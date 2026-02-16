@@ -104,7 +104,7 @@ const ProjectAdminOverview = () => {
                 <span className="bg-green-100 text-green-700 text-[10px] font-black px-2 py-1 rounded-md uppercase">Active</span>
               </div>
               <div className="flex items-center justify-between">
-                <span className="text-sm text-slate-600 font-medium">NGO Partnerships</span>
+                <span className="text-sm text-slate-600 font-medium">Organisation Partnerships</span>
                 <span className={project.isOpenForOrganizations ? "bg-green-100 text-green-700 text-[10px] font-black px-2 py-1 rounded-md uppercase" : "bg-slate-100 text-slate-500 text-[10px] font-black px-2 py-1 rounded-md uppercase"}>
                   {project.isOpenForOrganizations ? "Open" : "Closed"}
                 </span>

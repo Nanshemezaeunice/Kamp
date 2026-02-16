@@ -143,7 +143,7 @@ const AdminApplications = () => {
                       {app.userId?.name || "Unknown User"}
                     </h3>
                     <p className="text-xs text-slate-500 font-bold uppercase tracking-widest">
-                      {app.applicantType || "supporter"} · {app.involvementType || "General"}
+                      {app.applicantType || "advocate"} · {app.involvementType || "General"}
                     </p>
                   </div>
                 </div>

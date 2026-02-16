@@ -18,9 +18,9 @@ const Home = () => {
             Empowering Karamoja <br /> Through Transparent Aid
           </h1>
           <p className="text-lg md:text-xl text-blue-100 max-w-3xl mx-auto mb-10">
-            KAMP connects NGOs, donors, and communities to fight corruption and
-            ensure every resource reaches the people of Karamoja. Track projects,
-            manage funds, and make a real difference.
+            KAMP connects organisations, advocates, donors, and communities to fight
+            corruption and ensure every resource reaches the people of Karamoja.
+            Track projects, manage funds, and make a real difference.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link
@@ -49,16 +49,16 @@ const Home = () => {
             <div className="rounded-xl overflow-hidden bg-gray-50 shadow-lg hover:shadow-xl transition">
               <img 
                 src="https://images.unsplash.com/photo-1552664730-d307ca884978?w=500&h=300&fit=crop"
-                alt="NGOs Create Projects"
+                alt="Organisations Create Projects"
                 className="w-full h-48 object-cover"
               />
               <div className="p-6 text-center">
                 <h3 className="text-xl font-semibold text-gray-800 mb-2">
-                  NGOs Create Projects
+                  Organisations Create Projects
                 </h3>
                 <p className="text-gray-600">
-                  Verified NGOs create and publish projects that address real needs
-                  in the Karamoja region.
+                  Verified organisations and advocates create and publish projects
+                  that address real needs in the Karamoja region.
                 </p>
               </div>
             </div>
@@ -89,8 +89,8 @@ const Home = () => {
                   Track Every Shilling
                 </h3>
                 <p className="text-gray-600">
-                  Every transaction is tracked and visible. NGOs manage funds while
-                  donors monitor spending in real time.
+                  Every transaction is tracked and visible. Organisations manage funds
+                  while donors monitor spending in real time.
                 </p>
               </div>
             </div>
@@ -121,8 +121,8 @@ const Home = () => {
             Ready to Make a Difference?
           </h2>
           <p className="text-gray-300 mb-8 text-lg">
-            Whether you're an NGO looking to create impact or an individual
-            wanting to donate, KAMP is your platform for transparent aid.
+            Whether you're an organisation, an advocate looking to create impact,
+            or an individual wanting to donate, KAMP is your platform for transparent aid.
           </p>
           <Link
             to="/get-started"

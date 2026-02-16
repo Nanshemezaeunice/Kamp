@@ -66,7 +66,7 @@ const ProjectAdminLayout = () => {
       count: counts.organisations
     },
     { 
-      label: "Supporters", 
+      label: "Advocates", 
       path: `/admin/projects/${id}/supporters`, 
       icon: <Heart className="w-4 h-4" />,
       count: counts.supporters

@@ -23,7 +23,7 @@ const SupporterAdminProjects = () => {
       const res = await fetch(api(`/api/applications/user/${userId}`));
       if (res.ok) {
         const data = await res.json();
-        setApplications(data.filter(app => app.applicantType === "supporter"));
+        setApplications(data.filter(app => app.applicantType === "advocate"));
       }
     } catch (error) {
       console.error("Error fetching applications:", error);
@@ -64,7 +64,7 @@ const SupporterAdminProjects = () => {
       <div className="mb-6">
         <h2 className="text-2xl font-bold text-gray-900 mb-2">Projects & Applications</h2>
         <p className="text-sm text-gray-500">
-          View all projects and applications for this supporter
+          View all projects and applications for this advocate
         </p>
       </div>
 
@@ -102,7 +102,7 @@ const SupporterAdminProjects = () => {
               <FolderKanban className="w-12 h-12 text-gray-400 mx-auto mb-4" />
               <h3 className="text-lg font-medium text-gray-900 mb-2">No Involved Projects</h3>
               <p className="text-gray-500">
-                This supporter is not officially involved in any projects yet.
+                This advocate is not officially involved in any projects yet.
               </p>
             </div>
           ) : (
@@ -152,7 +152,7 @@ const SupporterAdminProjects = () => {
               <FileText className="w-12 h-12 text-gray-400 mx-auto mb-4" />
               <h3 className="text-lg font-medium text-gray-900 mb-2">No Applications History</h3>
               <p className="text-gray-500">
-                This supporter has no previous or pending applications.
+                This advocate has no previous or pending applications.
               </p>
             </div>
           ) : (

@@ -66,7 +66,7 @@ const SupporterMyProjects = () => {
     <div>
       <div className="mb-8">
         <h1 className="text-2xl font-bold text-gray-800 mb-2">My Projects</h1>
-        <p className="text-gray-500">Projects you are officially involved in as a supporter</p>
+        <p className="text-gray-500">Projects you are officially involved in as an advocate</p>
       </div>
 
       {projects.length === 0 ? (

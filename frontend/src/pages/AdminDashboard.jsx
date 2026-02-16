@@ -90,11 +90,11 @@ const AdminDashboard = () => {
           </div>
         </div>
 
-        {/* Total NGOs */}
+        {/* Total Organisations */}
         <div className="bg-white rounded-xl shadow-md p-6 border-l-4 border-green-600">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-gray-500 text-sm font-medium mb-1">Partner NGOs</p>
+              <p className="text-gray-500 text-sm font-medium mb-1">Partner Organisations</p>
               <p className="text-3xl font-bold text-gray-800">{uniqueNgos}</p>
             </div>
             <div className="text-4xl opacity-20">🏢</div>
@@ -112,11 +112,11 @@ const AdminDashboard = () => {
           </div>
         </div>
 
-        {/* NGO Applications */}
+        {/* Applications */}
         <div className="bg-white rounded-xl shadow-md p-6 border-l-4 border-amber-500">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-gray-500 text-sm font-medium mb-1">NGO Inquiries</p>
+              <p className="text-gray-500 text-sm font-medium mb-1">Applications</p>
               <p className="text-3xl font-bold text-gray-800">{unrespondedApplications.length}</p>
             </div>
             <div className="text-4xl opacity-20">📩</div>

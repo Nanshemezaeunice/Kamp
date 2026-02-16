@@ -36,7 +36,7 @@ const About = () => {
               KAMP was born from a simple belief: if we make every shilling
               traceable and every project transparent, we can break the cycle of
               wasted resources and empower actual change. Our platform connects
-              legitimate NGOs with genuine donors, ensuring that the right people
+              legitimate organisations with genuine donors, ensuring that the right people
               are involved and every resource reaches its intended destination.
             </p>
             <p className="text-gray-600 text-lg leading-relaxed">
@@ -75,7 +75,7 @@ const About = () => {
                 Accountability
               </h3>
               <p className="text-gray-600">
-                NGOs are held responsible for how they use funds. Donors can
+                Organisations are held responsible for how they use funds. Donors can
                 monitor progress and challenge discrepancies.
               </p>
             </div>
@@ -103,7 +103,7 @@ const About = () => {
             </div>
             <div>
               <p className="text-4xl font-bold">30+</p>
-              <p className="text-blue-200 mt-1">Partner NGOs</p>
+              <p className="text-blue-200 mt-1">Partner Organisations</p>
             </div>
             <div>
               <p className="text-4xl font-bold">$2M+</p>

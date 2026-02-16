@@ -34,7 +34,7 @@ const AdminSidebar = ({ isOpen, isCollapsed, toggleSidebar }) => {
       ),
     },
     {
-      label: "Supporters",
+      label: "Advocates",
       path: "/admin/supporters",
       icon: (
         <svg className="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -52,7 +52,7 @@ const AdminSidebar = ({ isOpen, isCollapsed, toggleSidebar }) => {
       ),
     },
     {
-      label: "NGO Apps",
+      label: "Applications",
       path: "/admin/applications",
       icon: (
         <svg className="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">

@@ -33,7 +33,7 @@ router.post("/", verifyToken, async (req, res) => {
     const app = await Application.create({
       projectId,
       userId: req.user.id,
-      applicantType: applicantType || "supporter",
+      applicantType: applicantType || "advocate",
       involvementType,
       message,
     });
@@ -100,12 +100,12 @@ router.get("/project/:projectId/counts", async (req, res) => {
       applicantType: "organization",
       status: { $in: ["pending", "reviewed"] }
     });
-    const supporters = await Application.countDocuments({ 
+    const advocates = await Application.countDocuments({ 
       projectId: req.params.projectId, 
-      applicantType: "supporter",
+      applicantType: "advocate",
       status: { $in: ["pending", "reviewed"] }
     });
-    res.json({ organizations: orgs, supporters });
+    res.json({ organizations: orgs, advocates });
   } catch (error) {
     res.status(500).json({ message: "Failed to fetch application counts" });
   }

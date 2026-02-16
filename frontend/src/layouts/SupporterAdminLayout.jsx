@@ -63,9 +63,9 @@ const SupporterAdminLayout = () => {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
-          <p className="text-gray-600 mb-4">Supporter not found</p>
+          <p className="text-gray-600 mb-4">Advocate not found</p>
           <Link to="/admin/supporters" className="text-blue-600 hover:underline">
-            Back to Supporters
+            Back to Advocates
           </Link>
         </div>
       </div>

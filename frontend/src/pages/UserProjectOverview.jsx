@@ -207,7 +207,7 @@ const UserProjectOverview = () => {
               </span>
             </div>
             <p className="text-xs text-blue-700">
-              You are officially involved in this project as a partner organization/supporter.
+              You are officially involved in this project as a partner organisation/advocate.
             </p>
           </div>
         </div>

@@ -243,7 +243,7 @@ const OrgSetup = () => {
                 value={form.registrationNumber}
                 onChange={(e) => setForm({ ...form, registrationNumber: e.target.value })}
                 className={inputClass}
-                placeholder="NGO-REG-XXXX"
+                placeholder="ORG-REG-XXXX"
               />
             </div>
 

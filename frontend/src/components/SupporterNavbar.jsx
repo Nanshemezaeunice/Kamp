@@ -30,7 +30,7 @@ const SupporterNavbar = ({ toggleSidebar }) => {
                 <span className="text-white font-bold text-sm">K</span>
               </div>
               <Link to="/supporter/dashboard" className="text-xl font-semibold text-gray-800 hover:text-blue-600 transition-colors">
-                KAMP Supporter
+                KAMP Advocate
               </Link>
             </div>
           </div>
@@ -42,7 +42,7 @@ const SupporterNavbar = ({ toggleSidebar }) => {
                   {user.name ? user.name.charAt(0).toUpperCase() : "S"}
                 </span>
               </div>
-              <span>{user.name || "Supporter"}</span>
+              <span>{user.name || "Advocate"}</span>
             </div>
 
             <button

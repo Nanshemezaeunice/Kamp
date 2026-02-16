@@ -14,7 +14,7 @@ const applicationSchema = new mongoose.Schema(
     },
     applicantType: {
       type: String,
-      enum: ["organization", "supporter"],
+      enum: ["organization", "advocate"],
       required: true,
     },
     involvementType: {

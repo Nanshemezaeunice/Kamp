@@ -144,7 +144,7 @@ const SupporterSetup = () => {
             <span className="text-white font-bold text-lg">K</span>
           </div>
           <h1 className="text-3xl font-bold text-gray-800 mb-2">
-            Complete Your Supporter Profile
+            Complete Your Advocate Profile
           </h1>
           <p className="text-gray-600 max-w-lg mx-auto">
             Tell us a bit more about yourself so we can tailor your KAMP
