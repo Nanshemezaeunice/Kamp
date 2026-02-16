@@ -8,3 +8,8 @@
 [functions]
   # Optional: where Netlify Functions live in this repo
   directory = "frontend/netlify/functions"
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
