@@ -197,10 +197,25 @@ const seedDB = async () => {
     await mongoose.connect(process.env.MONGO_URI);
     console.log("Connected to MongoDB for seeding...");
     
+    // Get the Admin User ID to assign as creatorId
+    const User = require('./models/User');
+    const admin = await User.findOne({ email: 'admin@kamp.com' });
+    
+    if (!admin) {
+      console.error("Admin user not found! Run admin-seed.js first.");
+      process.exit(1);
+    }
+
     await Project.deleteMany({});
     console.log("Cleared existing projects.");
     
-    await Project.insertMany(projects);
+    const projectsWithAdmin = projects.map(p => ({
+      ...p,
+      creatorId: admin._id,
+      approvalStatus: 'approved'
+    }));
+
+    await Project.insertMany(projectsWithAdmin);
     console.log("Successfully seeded projects!");
     
     process.exit();
