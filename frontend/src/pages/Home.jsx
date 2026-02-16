@@ -7,7 +7,7 @@ const Home = () => {
       <section 
         className="relative bg-cover bg-center text-white py-40"
         style={{
-          backgroundImage: `url('https://images.unsplash.com/photo-1559027615-cd4628902d4a?w=1200&h=600&fit=crop')`,
+          backgroundImage: `url('/Gemini_Generated_Image_7cajyp7cajyp7caj.png')`,
           backgroundAttachment: 'fixed'
         }}
       >
