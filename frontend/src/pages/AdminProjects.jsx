@@ -4,12 +4,6 @@ import { Link } from "react-router-dom";
 import CreateProjectModal from "../components/CreateProjectModal";
 import ConfirmationModal from "../components/ConfirmationModal";
 
-const verifiedNGOs = [
-  "Water4Life Uganda", "FeedKaramoja", "AgroAid Karamoja", 
-  "SheFuture Foundation", "HealthReach Uganda", "SunlightEd", 
-  "ActionAid Karamoja", "Skills4K", "Green Uganda"
-];
-
 const projectCategories = [
   "Health", "Education", "Water & Sanitation", "Agriculture", 
   "Gender & Development", "Energy", "Food & Nutrition", 
@@ -597,7 +591,6 @@ const AdminProjects = () => {
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         onCreate={handleCreateProject}
-        verifiedNGOs={verifiedNGOs}
         projectCategories={projectCategories}
       />
 

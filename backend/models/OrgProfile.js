@@ -25,6 +25,11 @@ const orgProfileSchema = new mongoose.Schema(
     },
     description: { type: String, required: true },
     phone: { type: String, required: true },
+    organisationType: {
+      type: String,
+      enum: ["NGO", "Religious", "Government", "Community-Based", "International", "Private Sector", "Academic/Research", "Other"],
+      default: "NGO",
+    },
 
     // Detailed Info (Step 2 - setup page)
     website: { type: String, default: "" },

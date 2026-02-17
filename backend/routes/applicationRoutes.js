@@ -111,6 +111,25 @@ router.get("/project/:projectId/counts", async (req, res) => {
   }
 });
 
+// Get unresponded (pending) application counts for a specific project
+router.get("/project/:projectId/unresponded-counts", async (req, res) => {
+  try {
+    const organisations = await Application.countDocuments({ 
+      projectId: req.params.projectId, 
+      applicantType: "organization",
+      status: "pending"
+    });
+    const supporters = await Application.countDocuments({ 
+      projectId: req.params.projectId, 
+      applicantType: "advocate",
+      status: "pending"
+    });
+    res.json({ organisations, supporters });
+  } catch (error) {
+    res.status(500).json({ message: "Failed to fetch unresponded counts" });
+  }
+});
+
 // Admin: Get applications by userId
 router.get("/user/:userId", async (req, res) => {
   try {

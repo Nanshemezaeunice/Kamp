@@ -3,24 +3,44 @@ import { api } from "../config";
 
 const SupporterDashboardHome = () => {
   const user = JSON.parse(localStorage.getItem("kamp_user") || "{}");
-  const [stats, setStats] = useState({ projectsBrowsed: 0, totalDonated: 0 });
+  const [stats, setStats] = useState({ projectsInvolved: 0, totalDonated: 0, projectsBrowsed: 0 });
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchStats = async () => {
       try {
         const token = localStorage.getItem("kamp_token");
-        const res = await fetch(api("/api/donations"), {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-        if (res.ok) {
-          const donations = await res.json();
-          const myDonations = donations.filter((d) => d.email === user.email);
-          setStats({
-            projectsBrowsed: new Set(myDonations.map((d) => d.projectId)).size,
-            totalDonated: myDonations.reduce((sum, d) => sum + (d.amount || 0), 0),
-          });
+        
+        // Fetch scoped dashboard stats (projects they're involved in)
+        const [dashRes, donRes] = await Promise.all([
+          fetch(api("/api/stats/my-dashboard"), {
+            headers: { Authorization: `Bearer ${token}` },
+          }),
+          fetch(api("/api/donations"), {
+            headers: { Authorization: `Bearer ${token}` },
+          })
+        ]);
+        
+        let projectsInvolved = 0;
+        let totalRaised = 0;
+        if (dashRes.ok) {
+          const dashData = await dashRes.json();
+          projectsInvolved = dashData.projects;
+          totalRaised = dashData.totalRaised;
         }
+        
+        let totalDonated = 0;
+        if (donRes.ok) {
+          const donations = await donRes.json();
+          const myDonations = donations.filter((d) => d.email === user.email);
+          totalDonated = myDonations.reduce((sum, d) => sum + (d.amount || 0), 0);
+        }
+        
+        setStats({
+          projectsInvolved,
+          totalDonated,
+          totalRaised,
+        });
       } catch {
         // ignore
       } finally {
@@ -31,8 +51,9 @@ const SupporterDashboardHome = () => {
   }, [user.email]);
 
   const statCards = [
-    { label: "Projects Supported", value: stats.projectsBrowsed, icon: "🎯", color: "blue" },
-    { label: "Total Donated", value: `$${stats.totalDonated.toLocaleString()}`, icon: "💝", color: "green" },
+    { label: "Projects Involved", value: stats.projectsInvolved, icon: "🎯", color: "blue" },
+    { label: "My Donations", value: `$${stats.totalDonated.toLocaleString()}`, icon: "💝", color: "green" },
+    { label: "Total Project Funds", value: `$${stats.totalRaised.toLocaleString()}`, icon: "📈", color: "purple" },
   ];
 
   return (
@@ -52,7 +73,7 @@ const SupporterDashboardHome = () => {
         </div>
       ) : (
         <>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
             {statCards.map((card) => (
               <div key={card.label} className="bg-white rounded-xl border border-gray-200 p-6 shadow-sm">
                 <div className="flex items-center justify-between mb-4">

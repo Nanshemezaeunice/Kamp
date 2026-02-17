@@ -13,9 +13,11 @@ const ProjectAdminLayout = () => {
   useEffect(() => {
     const fetchProjectAndCounts = async () => {
       try {
+        const token = localStorage.getItem("kamp_token");
+        const headers = token ? { Authorization: `Bearer ${token}` } : {};
         const [projRes, countsRes] = await Promise.all([
-          fetch(api(`/api/projects/${id}`)),
-          fetch(api(`/api/applications/project/${id}/unresponded-counts`))
+          fetch(api(`/api/projects/${id}`), { headers }),
+          fetch(api(`/api/applications/project/${id}/unresponded-counts`), { headers })
         ]);
 
         if (!projRes.ok) throw new Error("Project not found");
@@ -151,8 +153,10 @@ const ProjectAdminLayout = () => {
           project, 
           setProject, 
           refreshCounts: () => {
-            fetch(api(`/api/applications/project/${id}/unresponded-counts`))
-              .then(res => res.json())
+            const token = localStorage.getItem("kamp_token");
+            const headers = token ? { Authorization: `Bearer ${token}` } : {};
+            fetch(api(`/api/applications/project/${id}/unresponded-counts`), { headers })
+              .then(res => res.ok ? res.json() : { organisations: 0, supporters: 0 })
               .then(data => setCounts(data));
           } 
         }} />

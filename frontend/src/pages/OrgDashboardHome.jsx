@@ -10,16 +10,15 @@ const OrgDashboardHome = () => {
     const fetchStats = async () => {
       try {
         const token = localStorage.getItem("kamp_token");
-        const res = await fetch(api("/api/projects"), {
+        const res = await fetch(api("/api/stats/my-dashboard"), {
           headers: { Authorization: `Bearer ${token}` },
         });
         if (res.ok) {
-          const projects = await res.json();
-          const totalRaised = projects.reduce((sum, p) => sum + (p.raised || 0), 0);
+          const data = await res.json();
           setStats({
-            projects: projects.length,
-            donations: projects.reduce((sum, p) => sum + (p.donations?.length || 0), 0),
-            totalRaised,
+            projects: data.projects,
+            donations: data.donations,
+            totalRaised: data.totalRaised,
           });
         }
       } catch {

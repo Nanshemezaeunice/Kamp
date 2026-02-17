@@ -18,7 +18,9 @@ const UserProjectLayout = () => {
 
   const fetchProject = async () => {
     try {
-      const response = await fetch(api(`/api/projects/${id}`));
+      const token = localStorage.getItem("kamp_token");
+      const headers = token ? { Authorization: `Bearer ${token}` } : {};
+      const response = await fetch(api(`/api/projects/${id}`), { headers });
       if (!response.ok) throw new Error("Project not found");
       const data = await response.json();
       setProject(data);

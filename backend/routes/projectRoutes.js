@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const Project = require('../models/Project');
 const Application = require('../models/Application');
+const Notification = require('../models/Notification');
 const auth = require('../middleware/auth');
 const adminAuth = require('../middleware/adminAuth');
 const jwt = require('jsonwebtoken');
@@ -24,6 +25,10 @@ const getOptionalUser = async (req) => {
 const isProjectMember = async (userId, project) => {
   if (!userId) return false;
   if (project.creatorId && project.creatorId.toString() === userId) return true;
+  // Check partner organisations
+  if (project.partnerOrganisations?.some(p => p.userId?.toString() === userId && p.status === 'accepted')) return true;
+  // Check partner advocates
+  if (project.partnerAdvocates?.some(p => p.userId?.toString() === userId && p.status === 'accepted')) return true;
   // Check if user has an accepted application for this project
   const app = await Application.findOne({ projectId: project._id, userId, status: 'accepted' });
   return !!app;
@@ -33,10 +38,9 @@ const isProjectMember = async (userId, project) => {
 const publicProjectView = (project) => {
   const p = project.toObject ? project.toObject() : { ...project };
   // Hide sensitive internal details from non-registered users
+  // Keep milestones, achievements, and impactGoals visible to all
   delete p.budgetBreakdown;
   delete p.ngoRoles;
-  delete p.milestones;
-  delete p.impactGoals;
   return p;
 };
 
@@ -67,12 +71,14 @@ router.get('/', async (req, res) => {
       } else {
         // Logged in user sees:
         // - All approved public projects
-        // - All approved private projects (registered user)
         // - Their own pending/rejected projects
+        // Private projects are filtered out below (only members see them)
         query = {
           $or: [
-            { approvalStatus: 'approved' },
-            { approvalStatus: { $exists: false } },
+            { approvalStatus: 'approved', isPublic: true },
+            { approvalStatus: 'approved', isPublic: false, creatorId: decoded.id },
+            { approvalStatus: 'approved', isPublic: false, 'partnerOrganisations.userId': decoded.id, 'partnerOrganisations.status': 'accepted' },
+            { approvalStatus: 'approved', isPublic: false, 'partnerAdvocates.userId': decoded.id, 'partnerAdvocates.status': 'accepted' },
             { creatorId: decoded.id }
           ]
         };
@@ -120,6 +126,41 @@ router.post('/', auth, async (req, res) => {
   const project = new Project(projectData);
   try {
     const newProject = await project.save();
+    
+    // Send notifications to partner organisations
+    if (newProject.partnerOrganisations?.length > 0) {
+      const orgNotifications = newProject.partnerOrganisations
+        .filter(p => p.userId)
+        .map(partner => ({
+          userId: partner.userId,
+          type: 'partner_invitation',
+          title: 'Partnership Invitation',
+          message: `You have been invited to partner in the project "${newProject.name}" by ${req.user.name}.`,
+          projectId: newProject._id,
+          fromUserId: req.userId
+        }));
+      if (orgNotifications.length > 0) {
+        await Notification.insertMany(orgNotifications);
+      }
+    }
+    
+    // Send notifications to partner advocates
+    if (newProject.partnerAdvocates?.length > 0) {
+      const advNotifications = newProject.partnerAdvocates
+        .filter(p => p.userId)
+        .map(partner => ({
+          userId: partner.userId,
+          type: 'partner_invitation',
+          title: 'Partnership Invitation',
+          message: `You have been invited to partner in the project "${newProject.name}" by ${req.user.name}.`,
+          projectId: newProject._id,
+          fromUserId: req.userId
+        }));
+      if (advNotifications.length > 0) {
+        await Notification.insertMany(advNotifications);
+      }
+    }
+    
     res.status(201).json(newProject);
   } catch (err) {
     res.status(400).json({ message: err.message });
@@ -163,6 +204,17 @@ router.put('/:id/approve', adminAuth, async (req, res) => {
     
     project.approvalStatus = 'approved';
     await project.save();
+    
+    // Notify the project creator
+    await Notification.create({
+      userId: project.creatorId,
+      type: 'project_approved',
+      title: 'Project Approved',
+      message: `Your project "${project.name}" has been approved by KAMP Admin.`,
+      projectId: project._id,
+      fromUserId: req.userId
+    });
+    
     res.json(project);
   } catch (err) {
     res.status(500).json({ message: err.message });
@@ -178,6 +230,67 @@ router.put('/:id/reject', adminAuth, async (req, res) => {
     
     project.approvalStatus = 'rejected';
     await project.save();
+    
+    // Notify the project creator
+    await Notification.create({
+      userId: project.creatorId,
+      type: 'project_rejected',
+      title: 'Project Rejected',
+      message: `Your project "${project.name}" has been rejected by KAMP Admin. Please review and resubmit.`,
+      projectId: project._id,
+      fromUserId: req.userId
+    });
+    
+    res.json(project);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
+// @route   PUT /api/projects/:id/respond-partner
+// @desc    Respond to a partner invitation (accept/decline)
+router.put('/:id/respond-partner', auth, async (req, res) => {
+  try {
+    const { response } = req.body; // 'accepted' or 'declined'
+    if (!['accepted', 'declined'].includes(response)) {
+      return res.status(400).json({ message: 'Invalid response. Use "accepted" or "declined".' });
+    }
+    
+    const project = await Project.findById(req.params.id);
+    if (!project) return res.status(404).json({ message: 'Project not found' });
+    
+    let found = false;
+    
+    // Check partner organisations
+    const orgPartner = project.partnerOrganisations?.find(p => p.userId?.toString() === req.userId);
+    if (orgPartner) {
+      orgPartner.status = response;
+      found = true;
+    }
+    
+    // Check partner advocates
+    const advPartner = project.partnerAdvocates?.find(p => p.userId?.toString() === req.userId);
+    if (advPartner) {
+      advPartner.status = response;
+      found = true;
+    }
+    
+    if (!found) {
+      return res.status(404).json({ message: 'You are not a partner in this project.' });
+    }
+    
+    await project.save();
+    
+    // Notify the project creator
+    await Notification.create({
+      userId: project.creatorId,
+      type: response === 'accepted' ? 'partner_accepted' : 'partner_declined',
+      title: response === 'accepted' ? 'Partner Accepted' : 'Partner Declined',
+      message: `${req.user.name} has ${response} the partnership invitation for "${project.name}".`,
+      projectId: project._id,
+      fromUserId: req.userId
+    });
+    
     res.json(project);
   } catch (err) {
     res.status(500).json({ message: err.message });
@@ -203,9 +316,9 @@ router.get('/:id', async (req, res) => {
       return res.status(403).json({ message: 'Project not approved yet' });
     }
 
-    // Private projects: only visible to registered users
-    if (!project.isPublic && !decoded) {
-      return res.status(403).json({ message: 'This project is only visible to registered users. Please log in.' });
+    // Private projects: only visible to members, not general registered users
+    if (!project.isPublic && !isAdmin && !isCreator && !isMember) {
+      return res.status(403).json({ message: 'This project is private. Only project members can view it.' });
     }
 
     // Return different levels of detail based on role

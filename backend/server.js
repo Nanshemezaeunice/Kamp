@@ -61,6 +61,8 @@ app.use("/api/profiles", require("./routes/profileRoutes"));
 app.use("/api/organization/members", require("./routes/orgMemberRoutes"));
 app.use("/api/users", require("./routes/userRoutes"));
 app.use("/api/project-manage", require("./routes/projectManagementRoutes"));
+app.use("/api/notifications", require("./routes/notificationRoutes"));
+app.use("/api/stats", require("./routes/statsRoutes"));
 
 // Health check endpoint
 app.get("/", (req, res) => {

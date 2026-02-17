@@ -9,6 +9,11 @@ const orgCategories = [
   "Economic Development", "Other",
 ];
 
+const orgTypes = [
+  "NGO", "Religious", "Government", "Community-Based", 
+  "International", "Private Sector", "Academic/Research", "Other",
+];
+
 const individualInterests = [
   "Donating", "Volunteering", "Advocacy",
   "Research", "Community Monitoring", "Other",
@@ -21,7 +26,7 @@ const GetStarted = () => {
   // ─── NGO Form State ───
   const [ngoForm, setNgoForm] = useState({
     name: "", email: "", phone: "", password: "", confirmPassword: "",
-    category: "Health", description: "",
+    category: "Health", description: "", organisationType: "NGO",
   });
   const [ngoShowPw, setNgoShowPw] = useState(false);
   const [ngoShowCpw, setNgoShowCpw] = useState(false);
@@ -61,6 +66,7 @@ const GetStarted = () => {
           category: ngoForm.category,
           description: ngoForm.description,
           phone: ngoForm.phone,
+          organisationType: ngoForm.organisationType,
         }),
       });
       const data = await res.json();
@@ -230,6 +236,14 @@ const GetStarted = () => {
                 <select value={ngoForm.category} onChange={(e) => setNgoForm({ ...ngoForm, category: e.target.value })}
                   className={inputClass}>
                   {orgCategories.map((c) => (<option key={c}>{c}</option>))}
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Type of Organisation</label>
+                <select value={ngoForm.organisationType} onChange={(e) => setNgoForm({ ...ngoForm, organisationType: e.target.value })}
+                  className={inputClass}>
+                  {orgTypes.map((t) => (<option key={t}>{t}</option>))}
                 </select>
               </div>
 

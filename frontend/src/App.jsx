@@ -7,6 +7,7 @@ import Home from "./pages/Home";
 import Projects from "./pages/Projects";
 import About from "./pages/About";
 import Contact from "./pages/Contact";
+import Partners from "./pages/Partners";
 import GetStarted from "./pages/GetStarted";
 import ProjectDetails from "./pages/ProjectDetails";
 import AdminLogin from "./pages/AdminLogin";
@@ -46,6 +47,7 @@ import AdminProtectedRoute from "./components/AdminProtectedRoute";
 import OrgMembers from "./pages/OrgMembers";
 import OrgSettings from "./pages/OrgSettings";
 import SupporterSettings from "./pages/SupporterSettings";
+import AdminFunds from "./pages/AdminFunds";
 
 const router = createBrowserRouter([
   {
@@ -56,6 +58,7 @@ const router = createBrowserRouter([
       { path: "projects", element: <Projects /> },
       { path: "projects/:id", element: <ProjectDetails /> },
       { path: "about", element: <About /> },
+      { path: "partners", element: <Partners /> },
       { path: "contact", element: <Contact /> },
       { path: "get-started", element: <GetStarted /> },
       { path: "login", element: <Login /> },
@@ -77,6 +80,7 @@ const router = createBrowserRouter([
           { path: "projects", element: <AdminProjects /> },
           { path: "organisations", element: <AdminOrganisations /> },
           { path: "supporters", element: <AdminSupporters /> },
+          { path: "funds", element: <AdminFunds /> },
           { path: "team", element: <AdminTeam /> },
           { path: "applications", element: <AdminApplications /> },
         ],

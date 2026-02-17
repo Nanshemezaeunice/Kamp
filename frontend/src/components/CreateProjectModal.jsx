@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { api } from "../config";
 
 const KARAMOJA_DISTRICTS = [
   "Abim", "Amudat", "Kaabong", "Karenga", 
@@ -6,12 +7,6 @@ const KARAMOJA_DISTRICTS = [
 ];
 
 const TARGET_AUDIENCES = ["Men", "Women", "Kids", "Elderly", "All Communities"];
-
-const DEFAULT_NGOS = [
-  "Water4Life Uganda", "FeedKaramoja", "AgroAid Karamoja", 
-  "SheFuture Foundation", "HealthReach Uganda", "SunlightEd", 
-  "ActionAid Karamoja", "Skills4K", "Green Uganda"
-];
 
 const DEFAULT_CATEGORIES = [
   "Health", "Education", "Water & Sanitation", "Agriculture", 
@@ -23,17 +18,21 @@ const CreateProjectModal = ({
   isOpen, 
   onClose, 
   onCreate, 
-  verifiedOrgs = DEFAULT_NGOS, 
   projectCategories = DEFAULT_CATEGORIES 
 }) => {
   const [currentStep, setCurrentStep] = useState(1);
+  const [verifiedOrgs, setVerifiedOrgs] = useState([]);
+  const [verifiedAdvocates, setVerifiedAdvocates] = useState([]);
+  const [loadingPartners, setLoadingPartners] = useState(false);
   const [newProject, setNewProject] = useState({
     name: "",
+    partnerOrganisations: [],
+    partnerAdvocates: [],
     ngos: [],
     categories: [],
     districts: [],
     targetAudience: [],
-    status: "Planned",
+    status: "Planning",
     startDate: "",
     endDate: "",
     goal: "",
@@ -42,17 +41,52 @@ const CreateProjectModal = ({
     description: "",
     milestones: "",
     impactGoals: "",
-    schedulingType: "Planned",
-    verificationLinks: "",
     isPublic: true,
     isOpenForDonations: true,
     isOpenForOrganizations: true,
     complianceAgreed: false,
     image: "",
-    imageType: "link", // 'link' or 'upload'
+    imageType: "link",
   });
 
   const [imagePreview, setImagePreview] = useState("");
+
+  // Fetch verified partners from API
+  useEffect(() => {
+    if (isOpen) {
+      setLoadingPartners(true);
+      fetch(api("/api/stats/verified-partners"))
+        .then(res => res.ok ? res.json() : { organisations: [], advocates: [] })
+        .then(data => {
+          setVerifiedOrgs(data.organisations || []);
+          setVerifiedAdvocates(data.advocates || []);
+        })
+        .catch(() => {
+          setVerifiedOrgs([]);
+          setVerifiedAdvocates([]);
+        })
+        .finally(() => setLoadingPartners(false));
+    }
+  }, [isOpen]);
+
+  // Auto-calculate status based on dates
+  useEffect(() => {
+    if (newProject.startDate && newProject.endDate) {
+      const now = new Date();
+      const start = new Date(newProject.startDate);
+      const end = new Date(newProject.endDate);
+      
+      let autoStatus = "Planning";
+      if (now < start) {
+        autoStatus = "Planning";
+      } else if (now >= start && now < end) {
+        autoStatus = "Ongoing";
+      } else if (now >= end) {
+        autoStatus = "Completed";
+      }
+      setNewProject(prev => ({ ...prev, status: autoStatus }));
+    }
+  }, [newProject.startDate, newProject.endDate]);
 
   if (!isOpen) return null;
 
@@ -61,6 +95,56 @@ const CreateProjectModal = ({
       ? list.filter(i => i !== item) 
       : [...list, item];
     setNewProject({ ...newProject, [field]: updated });
+  };
+
+  const togglePartnerOrg = (org) => {
+    const existing = newProject.partnerOrganisations.find(p => p.userId === org.userId);
+    if (existing) {
+      setNewProject({
+        ...newProject,
+        partnerOrganisations: newProject.partnerOrganisations.filter(p => p.userId !== org.userId)
+      });
+    } else {
+      setNewProject({
+        ...newProject,
+        partnerOrganisations: [...newProject.partnerOrganisations, {
+          userId: org.userId,
+          name: org.name,
+          contribution: 0,
+          status: 'invited'
+        }]
+      });
+    }
+  };
+
+  const togglePartnerAdvocate = (adv) => {
+    const existing = newProject.partnerAdvocates.find(p => p.userId === adv.userId);
+    if (existing) {
+      setNewProject({
+        ...newProject,
+        partnerAdvocates: newProject.partnerAdvocates.filter(p => p.userId !== adv.userId)
+      });
+    } else {
+      setNewProject({
+        ...newProject,
+        partnerAdvocates: [...newProject.partnerAdvocates, {
+          userId: adv.userId,
+          name: adv.name,
+          contribution: 0,
+          status: 'invited'
+        }]
+      });
+    }
+  };
+
+  const updatePartnerContribution = (type, userId, amount) => {
+    const field = type === 'org' ? 'partnerOrganisations' : 'partnerAdvocates';
+    setNewProject({
+      ...newProject,
+      [field]: newProject[field].map(p =>
+        p.userId === userId ? { ...p, contribution: Number(amount) || 0 } : p
+      )
+    });
   };
 
   const handleImageUpload = (e) => {
@@ -85,13 +169,36 @@ const CreateProjectModal = ({
       alert("Please agree to the anti-corruption compliance.");
       return;
     }
-    onCreate(newProject);
+
+    // If donations are off, check that member contributions meet the goal
+    if (!newProject.isOpenForDonations) {
+      const totalContributions = [
+        ...newProject.partnerOrganisations,
+        ...newProject.partnerAdvocates
+      ].reduce((sum, p) => sum + (p.contribution || 0), 0);
+      
+      if (totalContributions < Number(newProject.goal)) {
+        alert(`Donations are turned off. Partner contributions ($${totalContributions.toLocaleString()}) must cover the full goal ($${Number(newProject.goal).toLocaleString()}) before the project can start.`);
+        return;
+      }
+    }
+
+    // Build ngos array from selected partner org names for backward compatibility
+    const ngoNames = newProject.partnerOrganisations.map(p => p.name);
+    
+    onCreate({
+      ...newProject,
+      ngos: ngoNames,
+      memberFunds: [...newProject.partnerOrganisations, ...newProject.partnerAdvocates]
+        .reduce((sum, p) => sum + (p.contribution || 0), 0)
+    });
+
     setNewProject({
-      name: "", ngos: [], categories: [], districts: [], targetAudience: [],
-      status: "Planned", startDate: "", endDate: "", goal: "", 
+      name: "", partnerOrganisations: [], partnerAdvocates: [], ngos: [],
+      categories: [], districts: [], targetAudience: [],
+      status: "Planning", startDate: "", endDate: "", goal: "", 
       budgetBreakdown: "", ngoRoles: "", description: "", milestones: "", 
-      impactGoals: "", schedulingType: "Planned", verificationLinks: "", 
-      isPublic: true, 
+      impactGoals: "", isPublic: true, 
       isOpenForDonations: true,
       isOpenForOrganizations: true,
       complianceAgreed: false, image: "", imageType: "link"
@@ -185,23 +292,127 @@ const CreateProjectModal = ({
 
                     <div className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm">
                       <label className="block text-sm font-bold text-slate-700 mb-4 text-center">Partner With</label>
-                      <p className="text-xs text-slate-400 text-center mb-3">Select registered & verified organisations to collaborate with</p>
-                      <div className="flex flex-wrap justify-center gap-2">
-                        {verifiedOrgs?.map(org => (
-                          <button
-                            key={org}
-                            type="button"
-                            onClick={() => toggleSelection(newProject.ngos, org, 'ngos')}
-                            className={`px-4 py-2.5 rounded-xl text-[11px] font-bold transition-all border ${
-                              newProject.ngos.includes(org)
-                                ? "bg-emerald-600 text-white border-emerald-700 shadow-lg shadow-emerald-100"
-                                : "bg-slate-50 text-slate-500 border-slate-100 hover:bg-slate-100"
-                            }`}
-                          >
-                            {org}
-                          </button>
-                        ))}
-                      </div>
+                      <p className="text-xs text-slate-400 text-center mb-4">Select verified organisations and advocates to collaborate with</p>
+                      
+                      {loadingPartners ? (
+                        <div className="text-center py-6">
+                          <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-600 mx-auto"></div>
+                          <p className="text-xs text-slate-400 mt-2">Loading verified partners...</p>
+                        </div>
+                      ) : (
+                        <div className="space-y-6">
+                          {/* Organisations */}
+                          <div>
+                            <h4 className="text-xs font-black text-slate-500 uppercase tracking-widest mb-3 flex items-center gap-2">
+                              <span className="w-5 h-5 bg-emerald-100 rounded-full flex items-center justify-center text-emerald-600 text-[10px]">O</span>
+                              Organisations ({verifiedOrgs.length})
+                            </h4>
+                            {verifiedOrgs.length === 0 ? (
+                              <p className="text-xs text-slate-400 text-center py-2">No verified organisations available</p>
+                            ) : (
+                              <div className="flex flex-wrap justify-center gap-2">
+                                {verifiedOrgs.map(org => {
+                                  const isSelected = newProject.partnerOrganisations.some(p => p.userId === org.userId);
+                                  return (
+                                    <button
+                                      key={org.userId}
+                                      type="button"
+                                      onClick={() => togglePartnerOrg(org)}
+                                      className={`px-4 py-2.5 rounded-xl text-[11px] font-bold transition-all border ${
+                                        isSelected
+                                          ? "bg-emerald-600 text-white border-emerald-700 shadow-lg shadow-emerald-100"
+                                          : "bg-slate-50 text-slate-500 border-slate-100 hover:bg-slate-100"
+                                      }`}
+                                    >
+                                      {org.name}
+                                      <span className="ml-1 opacity-60 text-[9px]">({org.organisationType || org.category})</span>
+                                    </button>
+                                  );
+                                })}
+                              </div>
+                            )}
+                          </div>
+
+                          {/* Advocates */}
+                          <div>
+                            <h4 className="text-xs font-black text-slate-500 uppercase tracking-widest mb-3 flex items-center gap-2">
+                              <span className="w-5 h-5 bg-blue-100 rounded-full flex items-center justify-center text-blue-600 text-[10px]">A</span>
+                              Advocates ({verifiedAdvocates.length})
+                            </h4>
+                            {verifiedAdvocates.length === 0 ? (
+                              <p className="text-xs text-slate-400 text-center py-2">No verified advocates available</p>
+                            ) : (
+                              <div className="flex flex-wrap justify-center gap-2">
+                                {verifiedAdvocates.map(adv => {
+                                  const isSelected = newProject.partnerAdvocates.some(p => p.userId === adv.userId);
+                                  return (
+                                    <button
+                                      key={adv.userId}
+                                      type="button"
+                                      onClick={() => togglePartnerAdvocate(adv)}
+                                      className={`px-4 py-2.5 rounded-xl text-[11px] font-bold transition-all border ${
+                                        isSelected
+                                          ? "bg-blue-600 text-white border-blue-700 shadow-lg shadow-blue-100"
+                                          : "bg-slate-50 text-slate-500 border-slate-100 hover:bg-slate-100"
+                                      }`}
+                                    >
+                                      {adv.name}
+                                      <span className="ml-1 opacity-60 text-[9px]">({adv.interest})</span>
+                                    </button>
+                                  );
+                                })}
+                              </div>
+                            )}
+                          </div>
+
+                          {/* Partner Contribution Amounts */}
+                          {(newProject.partnerOrganisations.length > 0 || newProject.partnerAdvocates.length > 0) && (
+                            <div className="mt-4 p-4 bg-slate-50 rounded-2xl border border-slate-100">
+                              <h4 className="text-xs font-black text-slate-500 uppercase tracking-widest mb-3">Partner Contributions</h4>
+                              <p className="text-[10px] text-slate-400 mb-3">Set the amount each partner will contribute to the project</p>
+                              <div className="space-y-2">
+                                {newProject.partnerOrganisations.map(p => (
+                                  <div key={p.userId} className="flex items-center gap-3">
+                                    <span className="text-xs font-bold text-emerald-700 flex-1 truncate">{p.name}</span>
+                                    <div className="relative w-32">
+                                      <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs">$</span>
+                                      <input
+                                        type="number"
+                                        value={p.contribution || ''}
+                                        onChange={(e) => updatePartnerContribution('org', p.userId, e.target.value)}
+                                        placeholder="0"
+                                        className="w-full pl-7 pr-3 py-2 bg-white border border-slate-200 rounded-lg text-xs font-bold outline-none focus:ring-2 focus:ring-emerald-500"
+                                      />
+                                    </div>
+                                  </div>
+                                ))}
+                                {newProject.partnerAdvocates.map(p => (
+                                  <div key={p.userId} className="flex items-center gap-3">
+                                    <span className="text-xs font-bold text-blue-700 flex-1 truncate">{p.name}</span>
+                                    <div className="relative w-32">
+                                      <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs">$</span>
+                                      <input
+                                        type="number"
+                                        value={p.contribution || ''}
+                                        onChange={(e) => updatePartnerContribution('adv', p.userId, e.target.value)}
+                                        placeholder="0"
+                                        className="w-full pl-7 pr-3 py-2 bg-white border border-slate-200 rounded-lg text-xs font-bold outline-none focus:ring-2 focus:ring-blue-500"
+                                      />
+                                    </div>
+                                  </div>
+                                ))}
+                                <div className="pt-2 border-t border-slate-200 flex justify-between">
+                                  <span className="text-xs font-bold text-slate-600">Total Partner Contributions</span>
+                                  <span className="text-xs font-black text-slate-800">
+                                    ${[...newProject.partnerOrganisations, ...newProject.partnerAdvocates]
+                                      .reduce((sum, p) => sum + (p.contribution || 0), 0).toLocaleString()}
+                                  </span>
+                                </div>
+                              </div>
+                            </div>
+                          )}
+                        </div>
+                      )}
                     </div>
                   </div>
                 </section>
@@ -306,16 +517,11 @@ const CreateProjectModal = ({
                     </div>
 
                     <div className="bg-white p-8 rounded-3xl border border-slate-100 shadow-sm flex flex-col justify-center">
-                      <label className="block text-sm font-bold text-slate-700 mb-3">Initial Status</label>
-                      <select
-                        value={newProject.status}
-                        onChange={(e) => setNewProject({...newProject, status: e.target.value})}
-                        className="w-full px-5 py-5 bg-slate-50 rounded-2xl outline-none focus:ring-2 focus:ring-blue-500 font-bold text-blue-600 appearance-none shadow-sm cursor-pointer"
-                      >
-                        <option>Planned</option>
-                        <option>Ongoing</option>
-                        <option>Completed</option>
-                      </select>
+                      <label className="block text-sm font-bold text-slate-700 mb-3">Project Status</label>
+                      <div className="w-full px-5 py-5 bg-slate-50 rounded-2xl font-bold text-blue-600 shadow-sm">
+                        {newProject.status}
+                      </div>
+                      <p className="text-[10px] text-slate-400 mt-2">Status is automatically set based on project dates: <strong>Planning</strong> (before start), <strong>Ongoing</strong> (during), <strong>Completed</strong> (after end)</p>
                     </div>
 
                     <div className="md:col-span-2 bg-white p-8 rounded-3xl border border-slate-100 shadow-sm">

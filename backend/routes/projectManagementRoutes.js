@@ -5,8 +5,25 @@ const Expenditure = require('../models/Expenditure');
 const Donation = require('../models/Donation');
 const Application = require('../models/Application');
 const auth = require('../middleware/auth');
+const jwt = require('jsonwebtoken');
 
-// ─── Middleware: verify user is project member (creator, admin, or accepted applicant) ───
+const JWT_SECRET = process.env.JWT_SECRET || 'kamp_secret_key_2026';
+
+// Helper: optional auth (doesn't reject unauthenticated users)
+const optionalAuth = (req, res, next) => {
+  const token = req.header('Authorization')?.replace('Bearer ', '');
+  if (!token) return next();
+  try {
+    const decoded = jwt.verify(token, JWT_SECRET);
+    req.userId = decoded.id;
+    req.user = decoded;
+  } catch (err) {
+    // invalid token, proceed without auth
+  }
+  next();
+};
+
+// ─── Middleware: verify user is project member (creator, admin, or accepted applicant/partner) ───
 const requireProjectAccess = async (req, res, next) => {
   try {
     const project = await Project.findById(req.params.projectId).populate('creatorId', 'name email type');
@@ -14,10 +31,21 @@ const requireProjectAccess = async (req, res, next) => {
 
     const isAdmin = req.user.type === 'Admin';
     const isCreator = project.creatorId && (project.creatorId._id || project.creatorId).toString() === req.userId;
+    
+    // Check accepted applications
     const acceptedApp = await Application.findOne({ 
       projectId: project._id, userId: req.userId, status: 'accepted' 
     });
-    const isMember = !!acceptedApp;
+    
+    // Check partner organisations and advocates
+    const isPartnerOrg = project.partnerOrganisations?.some(
+      p => p.userId?.toString() === req.userId && p.status === 'accepted'
+    );
+    const isPartnerAdv = project.partnerAdvocates?.some(
+      p => p.userId?.toString() === req.userId && p.status === 'accepted'
+    );
+    
+    const isMember = !!acceptedApp || isPartnerOrg || isPartnerAdv;
 
     if (!isAdmin && !isCreator && !isMember) {
       return res.status(403).json({ message: 'Access denied. You must be a project member.' });
@@ -225,10 +253,12 @@ router.delete('/:projectId/expenditures/:expId', auth, requireProjectAccess, asy
 // ═══════════════════════════════════════════════
 
 // @route   GET /api/project-manage/:projectId/milestones
-// @desc    Get all milestones for a project
-router.get('/:projectId/milestones', auth, requireProjectAccess, async (req, res) => {
+// @desc    Get all milestones for a project (public - visible to all users)
+router.get('/:projectId/milestones', async (req, res) => {
   try {
-    res.json(req.project.structuredMilestones || []);
+    const project = await Project.findById(req.params.projectId);
+    if (!project) return res.status(404).json({ message: 'Project not found' });
+    res.json(project.structuredMilestones || []);
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
@@ -285,10 +315,12 @@ router.delete('/:projectId/milestones/:msId', auth, requireProjectAccess, async 
 // ═══════════════════════════════════════════════
 
 // @route   GET /api/project-manage/:projectId/achievements
-// @desc    Get all achievements
-router.get('/:projectId/achievements', auth, requireProjectAccess, async (req, res) => {
+// @desc    Get all achievements (public - visible to all users)
+router.get('/:projectId/achievements', async (req, res) => {
   try {
-    res.json(req.project.achievements || []);
+    const project = await Project.findById(req.params.projectId);
+    if (!project) return res.status(404).json({ message: 'Project not found' });
+    res.json(project.achievements || []);
   } catch (err) {
     res.status(500).json({ message: err.message });
   }

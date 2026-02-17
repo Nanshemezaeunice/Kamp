@@ -10,7 +10,7 @@ const JWT_SECRET = process.env.JWT_SECRET || 'kamp_secret_key_2026';
 // Register
 router.post('/register', async (req, res) => {
   try {
-    const { name, email, password, type, category, description, phone, interest } = req.body;
+    const { name, email, password, type, category, description, phone, interest, organisationType } = req.body;
     
     const userExists = await User.findOne({ email });
     if (userExists) {
@@ -28,6 +28,7 @@ router.post('/register', async (req, res) => {
         category: category || 'Other',
         description: description || '',
         phone: phone || '',
+        organisationType: organisationType || 'NGO',
         setupStatus: 'details_pending',
       });
       await profile.save();

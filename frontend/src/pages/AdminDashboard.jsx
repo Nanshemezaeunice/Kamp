@@ -156,28 +156,7 @@ const AdminDashboard = () => {
           </div>
         </div>
 
-        {/* Metrics */}
-        <div className="bg-white rounded-xl shadow-md p-6">
-          <h2 className="text-xl font-bold text-gray-800 mb-4">Key Metrics</h2>
-          <div className="space-y-4">
-            <div className="flex justify-between items-center pb-4 border-b">
-              <span className="text-gray-600">Avg. Project Completion</span>
-              <span className="font-bold text-lg text-blue-600">65%</span>
-            </div>
-            <div className="flex justify-between items-center pb-4 border-b">
-              <span className="text-gray-600">Funds Tracked</span>
-              <span className="font-bold text-lg text-blue-600">{formatCurrency(totalRaised)}</span>
-            </div>
-            <div className="flex justify-between items-center pb-4 border-b">
-              <span className="text-gray-600">Donor Satisfaction</span>
-              <span className="font-bold text-lg text-blue-600">92%</span>
-            </div>
-            <div className="flex justify-between items-center">
-              <span className="text-gray-600">Fraud Prevention Rate</span>
-              <span className="font-bold text-lg text-blue-600">99.8%</span>
-            </div>
-          </div>
-        </div>
+        
       </div>
     </div>
   );

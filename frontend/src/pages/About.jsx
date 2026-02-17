@@ -1,4 +1,41 @@
+import { useState, useEffect } from "react";
+import { api } from "../config";
+import { Eye, Handshake, Heart } from "lucide-react";
+
 const About = () => {
+  const [stats, setStats] = useState({
+    activeProjects: 0,
+    partnerOrgs: 0,
+    fundsTracked: 0,
+    // livesImpacted removed per request
+  });
+
+  useEffect(() => {
+    const fetchStats = async () => {
+      try {
+        const res = await fetch(api("/api/stats/about"));
+        if (res.ok) {
+          const data = await res.json();
+          setStats(data);
+        }
+      } catch (err) {
+        console.error("Failed to fetch stats:", err);
+      }
+    };
+    fetchStats();
+  }, []);
+
+  const formatNumber = (num) => {
+    if (num >= 1000000) return `$${(num / 1000000).toFixed(1)}M+`;
+    if (num >= 1000) return `$${(num / 1000).toFixed(0)}K+`;
+    return `$${num.toLocaleString()}`;
+  };
+
+  const formatCount = (num) => {
+    if (num >= 1000) return `${(num / 1000).toFixed(0)}K+`;
+    return num.toString();
+  };
+
   return (
     <div>
       {/* Header */}
@@ -16,6 +53,20 @@ const About = () => {
           <p className="text-blue-100 text-lg max-w-2xl mx-auto">
             Karamoja Aid Management Platform — built to end corruption and bring
             transparency to every humanitarian project.
+          </p>
+        </div>
+      </section>
+
+      {/* How The Platform Works - explicit summary */}
+      <section className="py-12 bg-white">
+        <div className="max-w-5xl mx-auto px-4 text-gray-700">
+          <h2 className="text-2xl font-bold text-gray-800 mb-4">How the Platform Works</h2>
+          <p className="mb-2">
+            Organisations and advocates can register on KAMP, create projects, and receive donations.
+            Organisations can monitor their projects in detail, tracking milestones, performance, and funds over time.
+          </p>
+          <p>
+            Unauthenticated users can view projects and donate, but cannot register or create projects. To publish or manage projects you must be a verified organisation or advocate on the platform.
           </p>
         </div>
       </section>
@@ -60,7 +111,9 @@ const About = () => {
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div className="bg-white p-8 rounded-xl shadow-sm text-center">
-              <div className="text-4xl mb-4">🔍</div>
+                <div className="mb-4 flex items-center justify-center">
+                  <Eye className="w-12 h-12 text-blue-600" />
+                </div>
               <h3 className="text-xl font-bold text-gray-800 mb-2">
                 Transparency
               </h3>
@@ -70,7 +123,9 @@ const About = () => {
               </p>
             </div>
             <div className="bg-white p-8 rounded-xl shadow-sm text-center">
-              <div className="text-4xl mb-4">🤝</div>
+              <div className="mb-4 flex items-center justify-center">
+                <Handshake className="w-12 h-12 text-amber-600" />
+              </div>
               <h3 className="text-xl font-bold text-gray-800 mb-2">
                 Accountability
               </h3>
@@ -80,7 +135,9 @@ const About = () => {
               </p>
             </div>
             <div className="bg-white p-8 rounded-xl shadow-sm text-center">
-              <div className="text-4xl mb-4">❤️</div>
+              <div className="mb-4 flex items-center justify-center">
+                <Heart className="w-12 h-12 text-rose-600" />
+              </div>
               <h3 className="text-xl font-bold text-gray-800 mb-2">
                 Real Impact
               </h3>
@@ -96,22 +153,18 @@ const About = () => {
       {/* Stats */}
       <section className="py-20 bg-blue-800 text-white">
         <div className="max-w-7xl mx-auto px-4">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-8 text-center">
             <div>
-              <p className="text-4xl font-bold">50+</p>
+              <p className="text-4xl font-bold">{formatCount(stats.activeProjects)}</p>
               <p className="text-blue-200 mt-1">Active Projects</p>
             </div>
             <div>
-              <p className="text-4xl font-bold">30+</p>
+              <p className="text-4xl font-bold">{formatCount(stats.partnerOrgs)}</p>
               <p className="text-blue-200 mt-1">Partner Organisations</p>
             </div>
             <div>
-              <p className="text-4xl font-bold">$2M+</p>
+              <p className="text-4xl font-bold">{formatNumber(stats.fundsTracked)}</p>
               <p className="text-blue-200 mt-1">Funds Tracked</p>
-            </div>
-            <div>
-              <p className="text-4xl font-bold">100K+</p>
-              <p className="text-blue-200 mt-1">Lives Impacted</p>
             </div>
           </div>
         </div>

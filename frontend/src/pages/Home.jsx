@@ -95,6 +95,17 @@ const Home = () => {
               </div>
             </div>
           </div>
+          <div className="mt-8 max-w-3xl mx-auto text-center text-gray-700">
+            <p className="mb-2">
+              Organisations and advocates can register on KAMP, create projects, and
+              receive donations to fund their work. Organisations can monitor
+              projects in detail — tracking milestones and performance over time.
+            </p>
+            <p>
+              Unauthenticated visitors can view projects and donate, but they cannot
+              register or create projects. To publish or manage projects you must be a verified organisation or advocate.
+            </p>
+          </div>
         </div>
       </section>
 
