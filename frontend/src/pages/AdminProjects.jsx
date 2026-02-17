@@ -131,6 +131,9 @@ const AdminProjects = () => {
     try {
       const response = await fetch(api(`/api/projects/${projectId}`), {
         method: "DELETE",
+        headers: {
+          "Authorization": `Bearer ${token}`
+        }
       });
       if (response.ok) {
         fetchProjects();
