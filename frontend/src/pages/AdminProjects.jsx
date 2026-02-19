@@ -410,14 +410,44 @@ const AdminProjects = () => {
                       )}
 
                     <div className="mt-auto flex gap-2">
-                      {/* Admin-created projects are auto-approved, so all projects here just get the Management link */}
-                      <Link 
-                        to={`/admin/projects/${project._id}`}
-                        target="_blank"
-                        className="flex-1 px-4 py-2 bg-gray-50 hover:bg-blue-600 hover:text-white text-gray-700 text-sm font-semibold rounded-lg transition-all duration-200 text-center"
-                      >
-                        Management
-                      </Link>
+                      {/* Projects created by non-admins start as 'pending' and need a decision.
+                          Admin-created projects are auto-approved so they go straight to Management. */}
+                      {project.approvalStatus === 'pending' ? (
+                        <>
+                          <button
+                            onClick={() => openConfirmModal(
+                              "success",
+                              "Approve Project",
+                              `Approve "${project.name}" so it goes live on the platform?`,
+                              "Approve",
+                              () => handleApproveProject(project._id)
+                            )}
+                            className="flex-1 px-3 py-2 bg-green-50 hover:bg-green-600 hover:text-white text-green-700 text-xs font-semibold rounded-lg transition-all duration-200 text-center border border-green-200"
+                          >
+                            Approve
+                          </button>
+                          <button
+                            onClick={() => openConfirmModal(
+                              "danger",
+                              "Reject Project",
+                              `Reject "${project.name}"? This will prevent it from going live.`,
+                              "Reject",
+                              () => handleRejectProject(project._id)
+                            )}
+                            className="flex-1 px-3 py-2 bg-red-50 hover:bg-red-600 hover:text-white text-red-700 text-xs font-semibold rounded-lg transition-all duration-200 text-center border border-red-200"
+                          >
+                            Reject
+                          </button>
+                        </>
+                      ) : (
+                        <Link 
+                          to={`/admin/projects/${project._id}`}
+                          target="_blank"
+                          className="flex-1 px-4 py-2 bg-gray-50 hover:bg-blue-600 hover:text-white text-gray-700 text-sm font-semibold rounded-lg transition-all duration-200 text-center"
+                        >
+                          Management
+                        </Link>
+                      )}
                       <button 
                         onClick={() => setSelectedProject(project)}
                         className="px-3 py-2 bg-white border border-gray-200 hover:border-blue-500 hover:text-blue-600 transition rounded-lg"

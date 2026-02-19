@@ -86,9 +86,64 @@ const ProjectAdminOrganisations = () => {
     );
   }
 
+  // Partner orgs listed at project creation (from partnerOrganisations on the project itself)
+  const partnerOrgs = project?.partnerOrganisations || [];
+
+  const partnerStatusColors = {
+    invited: "bg-amber-100 text-amber-700",
+    accepted: "bg-emerald-100 text-emerald-700",
+    declined: "bg-red-100 text-red-700",
+  };
+
   return (
-    <div className="space-y-8 animate-fadeIn">
-      <div className="flex justify-between items-center">
+    <div className="space-y-10 animate-fadeIn">
+
+      {/* ── Partner Organisations ── */}
+      {/* These are orgs the project creator listed as partners during setup */}
+      <div>
+        <div className="flex justify-between items-center mb-4">
+          <div>
+            <h2 className="text-2xl font-bold text-slate-900">Partner Organisations</h2>
+            <p className="text-sm text-slate-500 font-medium">
+              {partnerOrgs.length} organisation{partnerOrgs.length !== 1 ? 's' : ''} listed as partner{partnerOrgs.length !== 1 ? 's' : ''} for this project
+            </p>
+          </div>
+        </div>
+
+        {partnerOrgs.length === 0 ? (
+          <div className="py-10 bg-slate-50 border-2 border-dashed border-slate-200 rounded-2xl flex flex-col items-center justify-center text-center">
+            <Building2 className="w-10 h-10 text-slate-300 mb-3" />
+            <p className="text-slate-500 font-bold uppercase text-[10px] tracking-widest">No partner organisations listed</p>
+            <p className="text-sm text-slate-400 max-w-xs px-6">No organisations were tagged as partners when this project was created.</p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+            {partnerOrgs.map((org, i) => (
+              <div key={org.userId || i} className="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm flex items-center justify-between gap-4">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 bg-blue-50 rounded-xl flex items-center justify-center text-blue-600">
+                    <Building2 className="w-5 h-5" />
+                  </div>
+                  <div>
+                    <p className="font-black text-slate-800 uppercase tracking-tight text-sm">{org.name || "Unknown Organisation"}</p>
+                    {org.contribution > 0 && (
+                      <p className="text-xs text-slate-500">Contribution: ${org.contribution.toLocaleString()}</p>
+                    )}
+                  </div>
+                </div>
+                <span className={`px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest ${partnerStatusColors[org.status] || "bg-gray-100 text-gray-600"}`}>
+                  {org.status}
+                </span>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+
+      {/* ── Organisation Applications ── */}
+      {/* These are orgs that applied to join the project themselves */}
+      <div>
+      <div className="flex justify-between items-center mb-4">
         <div>
           <h2 className="text-2xl font-bold text-slate-900">Organization Applications</h2>
           <p className="text-sm text-slate-500 font-medium">
@@ -250,6 +305,7 @@ const ProjectAdminOrganisations = () => {
           onReasonChange={setRejectionReason}
         />
       )}
+      </div>{/* end applications section */}
     </div>
   );
 };
