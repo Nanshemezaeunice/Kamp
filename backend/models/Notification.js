@@ -1,3 +1,5 @@
+// In-app notification record — covers partner invitations, project status changes and general alerts.
+// The compound index on (userId, read) keeps the unread-count query fast.
 const mongoose = require('mongoose');
 
 const notificationSchema = new mongoose.Schema({

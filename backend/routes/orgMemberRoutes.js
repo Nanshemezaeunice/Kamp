@@ -1,3 +1,5 @@
+// Organisation sub-team management.
+// An org owner can invite colleagues (OrganizationMembers) who then get read access to that org's projects.
 const express = require("express");
 const router = express.Router();
 const OrganizationMember = require("../models/OrganizationMember");

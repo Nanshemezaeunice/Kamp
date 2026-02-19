@@ -1,3 +1,4 @@
+// Shows only the projects this org created (not ones they joined as a partner).
 import { useState, useEffect } from "react";
 import { api } from "../config";
 import { Link } from "react-router-dom";

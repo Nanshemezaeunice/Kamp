@@ -1,3 +1,5 @@
+// KAMP internal team (admin accounts) management.
+// Only existing admins can create, update or remove other admin accounts.
 const express = require('express');
 const router = express.Router();
 const User = require('../models/User');

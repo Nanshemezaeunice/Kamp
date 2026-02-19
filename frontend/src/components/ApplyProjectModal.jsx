@@ -1,3 +1,5 @@
+// Modal for submitting a join application to a project.
+// Covers both organisations and individual advocates via the applicantType in the request.
 import { useState } from "react";
 import { X, Send } from "lucide-react";
 import { api } from "../config";

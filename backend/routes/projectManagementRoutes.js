@@ -1,3 +1,5 @@
+// Project management routes — milestones, team, finances, expenditures.
+// Protected: only the project creator, admin, or accepted partners/applicants can reach these endpoints.
 const express = require('express');
 const router = express.Router();
 const Project = require('../models/Project');
@@ -9,7 +11,7 @@ const jwt = require('jsonwebtoken');
 
 const JWT_SECRET = process.env.JWT_SECRET || 'kamp_secret_key_2026';
 
-// Helper: optional auth (doesn't reject unauthenticated users)
+// Optional auth — lets public pages use the same endpoints without erroring on missing tokens
 const optionalAuth = (req, res, next) => {
   const token = req.header('Authorization')?.replace('Bearer ', '');
   if (!token) return next();

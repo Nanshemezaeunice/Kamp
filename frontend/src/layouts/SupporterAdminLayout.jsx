@@ -1,3 +1,5 @@
+// Layout wrapper for the admin view of a specific supporter (individual user).
+// Loads the supporter's profile and provides scoped navigation for admin review.
 import { useState, useEffect } from "react";
 import { Outlet, Link, useParams, useLocation } from "react-router-dom";
 import { Users, LayoutDashboard, Settings, ArrowLeft, FolderKanban } from "lucide-react";

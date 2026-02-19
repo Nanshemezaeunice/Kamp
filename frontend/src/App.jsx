@@ -1,3 +1,5 @@
+// Root of the React application.
+// All routes are defined here so there's one place to see the full URL structure.
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import MainLayout from "./layouts/MainLayout";
 import AdminLayout from "./layouts/AdminLayout";

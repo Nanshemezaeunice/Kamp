@@ -1,3 +1,4 @@
+// Top navigation bar for the supporter (individual) dashboard.
 import { Link, useNavigate } from "react-router-dom";
 
 const SupporterNavbar = ({ toggleSidebar }) => {

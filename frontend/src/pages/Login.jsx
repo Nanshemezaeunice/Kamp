@@ -1,3 +1,5 @@
+// Shared login page for both organisations and individual supporters.
+// After a successful login we check setupStatus to decide where to send the user.
 import { useState } from "react";
 import { api, apiFetch } from "../config";
 import { Link, useNavigate } from "react-router-dom";
@@ -31,13 +33,13 @@ const Login = () => {
         return;
       }
 
-      // Store auth data
+      // Store auth data so layouts and API calls can always grab the token + user
       localStorage.setItem("kamp_token", data.token);
       localStorage.setItem("kamp_user", JSON.stringify(data.user));
 
       const { type, setupStatus } = data.user;
 
-      // Handle Admin separately (optional, but good for completeness)
+      // Admin users go straight to the admin dashboard — they skip the setup wizard
       if (type === "Admin") {
         localStorage.setItem("adminToken", data.token);
         navigate("/admin/dashboard");

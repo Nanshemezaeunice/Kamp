@@ -1,3 +1,5 @@
+// First-time setup wizard for individual supporters.
+// Mirrors OrgSetup but asks for personal interests and background instead of org details.
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { CheckCircle } from "lucide-react";

@@ -1,3 +1,4 @@
+// Shows only the projects this supporter created (not ones they applied to join).
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { FolderKanban, Calendar, DollarSign, Users, TrendingUp, ExternalLink } from "lucide-react";

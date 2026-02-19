@@ -1,3 +1,5 @@
+// Milestone and achievement tracker for a project.
+// Milestones are planned checkpoints; achievements are real outcomes actually delivered.
 import { useState, useEffect } from "react";
 import { useOutletContext } from "react-router-dom";
 import { 

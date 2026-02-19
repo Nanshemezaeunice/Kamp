@@ -1,3 +1,4 @@
+// Shared footer — keep it simple. Links to the main public pages and social handles.
 import { Link } from "react-router-dom";
 
 const Footer = () => {

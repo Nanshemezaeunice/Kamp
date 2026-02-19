@@ -1,3 +1,5 @@
+// Admin view of all individual supporters/advocates on the platform.
+// Mirrors the organisations view but for Individual-type accounts.
 import { useState, useEffect } from "react";
 import { api } from "../config";
 import { Link } from "react-router-dom";

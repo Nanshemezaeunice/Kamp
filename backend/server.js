@@ -1,15 +1,20 @@
+// Main entry point for the KAMP backend.
+// Spins up Express, wires CORS, loads all route modules and starts listening.
 const express = require("express");
 const cors = require("cors");
 const dotenv = require("dotenv");
 const connectDB = require("./config/db");
 
+// Load .env variables before anything else touches process.env
 dotenv.config();
 
+// Connect to MongoDB — if this fails the process exits so we don't silently run with no DB
 connectDB();
 
 const app = express();
 
-// CORS configuration - Allow specific origins but keep logs for troubleshooting
+// CORS — we maintain an explicit allow-list so random third-party sites can't hit our API.
+// Add new deployment URLs here as the project grows.
 const allowedOrigins = [
   "http://localhost:5173",
   "http://localhost:3000",
@@ -49,13 +54,14 @@ app.options('*', cors(corsOptions));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// API Routes
+// ─── Route modules ───────────────────────────────────────────────────────────
+// Each feature area gets its own router file to keep things manageable.
 app.use("/api/projects", require("./routes/projectRoutes"));
 app.use("/api/auth", require("./routes/authRoutes"));
 app.use("/api/donations", require("./routes/donationRoutes"));
 app.use("/api/admin/members", require("./routes/adminMemberRoutes"));
 app.use("/api/admin/organizations", require("./routes/adminOrgRoutes"));
-app.use("/api/admin/supporters", require("./routes/adminSupporterRoutes")); // advocates
+app.use("/api/admin/supporters", require("./routes/adminSupporterRoutes")); // "supporters" here means advocates
 app.use("/api/applications", require("./routes/applicationRoutes"));
 app.use("/api/profiles", require("./routes/profileRoutes"));
 app.use("/api/organization/members", require("./routes/orgMemberRoutes"));

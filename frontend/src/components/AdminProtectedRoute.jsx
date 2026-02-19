@@ -1,3 +1,4 @@
+// Guards all /admin/* routes — redirects to the admin login if no valid token is found.
 import { Navigate, Outlet } from "react-router-dom";
 
 const AdminProtectedRoute = () => {

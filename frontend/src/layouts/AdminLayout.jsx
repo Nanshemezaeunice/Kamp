@@ -1,3 +1,4 @@
+// Shell layout for all admin pages — sidebar collapses on mobile, toggles between icon-only and full on desktop.
 import { useState } from "react";
 import { Outlet } from "react-router-dom";
 import AdminNavbar from "../components/AdminNavbar";

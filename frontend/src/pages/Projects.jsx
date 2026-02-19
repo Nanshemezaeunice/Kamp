@@ -1,3 +1,5 @@
+// Public project discovery page.
+// Works for both logged-in and anonymous users — logged-in users get apply/create actions too.
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import DonationForm from "../components/DonationForm";

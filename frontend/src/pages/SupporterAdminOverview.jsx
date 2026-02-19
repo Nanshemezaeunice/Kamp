@@ -1,3 +1,4 @@
+// Detailed supporter profile view for admin — shows their background, interests and account status.
 import { useOutletContext } from "react-router-dom";
 import { Mail, Phone, MapPin, Calendar, Briefcase, FileText, Heart } from "lucide-react";
 

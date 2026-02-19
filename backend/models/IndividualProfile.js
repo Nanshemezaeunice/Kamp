@@ -1,3 +1,5 @@
+// Profile for individual supporters and advocates.
+// Extends the User record with personal interests, setup status and bio.
 const mongoose = require("mongoose");
 
 const individualProfileSchema = new mongoose.Schema(

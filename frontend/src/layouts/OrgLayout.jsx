@@ -1,3 +1,4 @@
+// Shell layout for the organisation dashboard — matches the admin layout structure.
 import { useState } from "react";
 import { Outlet } from "react-router-dom";
 import OrgNavbar from "../components/OrgNavbar";

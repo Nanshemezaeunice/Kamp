@@ -1,3 +1,5 @@
+// Quick-look modal shown when a user clicks a project card.
+// Surfaces the key details and gives apply/donate CTAs based on the viewer's relationship to the project.
 import { X, MapPin, Users, Calendar, DollarSign, Heart, Crown } from "lucide-react";
 
 const ProjectInfoModal = ({ project, onClose, onApply, onDonate, hasApplied, applicationStatus, currentUserId }) => {

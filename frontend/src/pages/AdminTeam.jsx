@@ -1,3 +1,5 @@
+// KAMP internal team management — admins can invite colleagues, reset passwords, and remove access.
+// Only admins can reach this page (protected route).
 import { useState, useEffect } from "react";
 import { api } from "../config";
 import ConfirmationModal from "../components/ConfirmationModal";

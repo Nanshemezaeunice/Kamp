@@ -1,3 +1,5 @@
+// Public listing of all verified organisations and individual advocates on the platform.
+// Visitors can see who's doing what without being logged in.
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { api } from "../config";

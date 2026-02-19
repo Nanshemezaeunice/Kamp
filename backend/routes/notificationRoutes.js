@@ -1,3 +1,5 @@
+// In-app notifications — created server-side whenever something noteworthy happens
+// (application accepted, partner invited, etc.) and polled by the frontend.
 const express = require('express');
 const router = express.Router();
 const Notification = require('../models/Notification');

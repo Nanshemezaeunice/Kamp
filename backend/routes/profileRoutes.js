@@ -1,3 +1,5 @@
+// Profile CRUD for both org and individual accounts.
+// Keeps profile data separate from the core User model so neither bloats the other.
 const express = require("express");
 const router = express.Router();
 const jwt = require("jsonwebtoken");

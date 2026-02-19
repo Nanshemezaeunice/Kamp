@@ -1,3 +1,5 @@
+// Top navigation bar for the public-facing site.
+// Sticky so it's always reachable while scrolling.
 import { Link } from "react-router-dom";
 
 const Navbar = () => {

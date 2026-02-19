@@ -1,3 +1,4 @@
+// Dedicated admin login page — separate from the user login so admin credentials stay isolated.
 import { useState } from "react";
 import { api } from "../config";
 import { useNavigate } from "react-router-dom";

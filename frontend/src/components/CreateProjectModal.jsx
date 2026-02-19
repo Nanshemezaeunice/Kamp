@@ -1,3 +1,6 @@
+// Multi-step form for creating a new project.
+// Steps: Identity → Scope → Logistics → Impact.
+// Used by admins, orgs, and supporters — so it's designed to work in all three contexts.
 import { useState, useEffect } from "react";
 import { api } from "../config";
 
@@ -20,6 +23,9 @@ const CreateProjectModal = ({
   onCreate, 
   projectCategories = DEFAULT_CATEGORIES 
 }) => {
+  // Pull the logged-in user so we can hide their own org from the partner list
+  const currentUser = JSON.parse(localStorage.getItem("kamp_user") || "{}");
+
   const [currentStep, setCurrentStep] = useState(1);
   const [verifiedOrgs, setVerifiedOrgs] = useState([]);
   const [verifiedAdvocates, setVerifiedAdvocates] = useState([]);
@@ -70,6 +76,7 @@ const CreateProjectModal = ({
   }, [isOpen]);
 
   // Auto-calculate status based on dates
+  // This saves the user from having to manually track which phase the project is in
   useEffect(() => {
     if (newProject.startDate && newProject.endDate) {
       const now = new Date();
@@ -305,13 +312,14 @@ const CreateProjectModal = ({
                           <div>
                             <h4 className="text-xs font-black text-slate-500 uppercase tracking-widest mb-3 flex items-center gap-2">
                               <span className="w-5 h-5 bg-emerald-100 rounded-full flex items-center justify-center text-emerald-600 text-[10px]">O</span>
-                              Organisations ({verifiedOrgs.length})
+                              Organisations ({verifiedOrgs.filter(o => o.userId !== currentUser?.id).length})
                             </h4>
-                            {verifiedOrgs.length === 0 ? (
+                            {verifiedOrgs.filter(o => o.userId !== currentUser?.id).length === 0 ? (
                               <p className="text-xs text-slate-400 text-center py-2">No verified organisations available</p>
                             ) : (
                               <div className="flex flex-wrap justify-center gap-2">
-                                {verifiedOrgs.map(org => {
+                                {/* Don't show the creator's own organisation — you can't partner with yourself */}
+                                {verifiedOrgs.filter(o => o.userId !== currentUser?.id).map(org => {
                                   const isSelected = newProject.partnerOrganisations.some(p => p.userId === org.userId);
                                   return (
                                     <button

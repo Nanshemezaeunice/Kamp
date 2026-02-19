@@ -1,3 +1,4 @@
+// Legacy modal for NGO/org applications — may be superseded by ApplyProjectModal in newer flows.
 import { useState } from "react";
 import { X, Send, Building2, User, Mail, Phone, MessageSquare } from "lucide-react";
 import { api } from "../config";

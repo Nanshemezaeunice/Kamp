@@ -1,3 +1,5 @@
+// Registration page for new organisations and individual supporters.
+// The user picks their role first, then fills in the relevant form.
 import { useState } from "react";
 import { api } from "../config";
 import { Link, useNavigate } from "react-router-dom";
@@ -181,7 +183,7 @@ const GetStarted = () => {
                 className="p-8 rounded-xl border-2 border-gray-200 hover:border-blue-500 hover:shadow-lg transition text-left cursor-pointer bg-white overflow-hidden flex flex-col"
               >
                 <img
-                  src="https://images.unsplash.com/photo-1469169504649-88b996d3dd5f?w=400&h=250&fit=crop"
+                  src="https://adcolaw.com/wp-content/uploads/2022/02/Duties-of-an-Advocate.png"
                   alt="Advocate"
                   className="w-full h-40 object-cover rounded mb-4"
                 />

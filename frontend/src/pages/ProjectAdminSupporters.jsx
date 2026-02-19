@@ -1,3 +1,5 @@
+// Manage supporter/advocate applications for a specific project.
+// Same workflow as the org applications tab but for Individual-type accounts.
 import { useState, useEffect } from "react";
 import { api } from "../config";
 import { useOutletContext } from "react-router-dom";

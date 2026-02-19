@@ -1,3 +1,5 @@
+// First-time setup wizard for newly registered organisations.
+// Forces completion before the org can access their dashboard.
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { CheckCircle } from "lucide-react";

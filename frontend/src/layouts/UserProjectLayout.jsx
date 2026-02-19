@@ -1,3 +1,5 @@
+// Wrapper layout for the user-facing project management pages (finances, milestones, team).
+// Loads the project and passes it to child routes via Outlet context.
 import { useState, useEffect } from "react";
 import { useParams, Outlet, Link, useLocation } from "react-router-dom";
 import { ArrowLeft, ExternalLink, AlertCircle, LayoutDashboard, Wallet, Target, Users } from "lucide-react";

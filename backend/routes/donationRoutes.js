@@ -1,9 +1,11 @@
+// Donation routes — record incoming donations and keep project totals in sync.
+// Note: payment processing is handled client-side; we just persist the completed transaction.
 const express = require('express');
 const router = express.Router();
 const Donation = require('../models/Donation');
 const Project = require('../models/Project');
 
-// Create a donation
+// POST /api/donations — save a new donation and bump the project's raised + donor counters
 router.post('/', async (req, res) => {
   try {
     const { projectId, amount, donorType, name, message, cause, userId, paymentMethod } = req.body;
@@ -21,7 +23,7 @@ router.post('/', async (req, res) => {
 
     await donation.save();
 
-    // Update project raised amount and donor count
+    // Atomically increment raised and donor count so we never have a stale read
     await Project.findByIdAndUpdate(projectId, {
       $inc: { 
         raised: Number(amount),
@@ -35,7 +37,7 @@ router.post('/', async (req, res) => {
   }
 });
 
-// Get donations for a project
+// GET /api/donations/project/:projectId — all donations for a single project, newest first
 router.get('/project/:projectId', async (req, res) => {
   try {
     const donations = await Donation.find({ projectId: req.params.projectId })

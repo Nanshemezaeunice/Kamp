@@ -1,3 +1,5 @@
+// Generic auth middleware — validates JWT and attaches the full user object to req.
+// Any route that needs to know who's calling should use this.
 const jwt = require("jsonwebtoken");
 const User = require("../models/User");
 
@@ -12,12 +14,14 @@ const auth = async (req, res, next) => {
     }
     
     const decoded = jwt.verify(token, JWT_SECRET);
+    // Re-fetch from DB so we always have the latest user info (e.g. after role changes)
     const user = await User.findById(decoded.id);
     
     if (!user) {
       return res.status(401).json({ error: "User not found." });
     }
     
+    // Attach both the raw id and the full document so downstream handlers have options
     req.userId = decoded.id;
     req.user = user;
     next();

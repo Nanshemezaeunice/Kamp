@@ -1,3 +1,5 @@
+// Project browser for individual supporters.
+// Same structure as the org version but without the organisation-specific actions.
 import { useState, useEffect } from "react";
 import { CheckCircle, Clock, XCircle, Eye, Plus } from "lucide-react";
 import ProjectInfoModal from "../components/ProjectInfoModal";

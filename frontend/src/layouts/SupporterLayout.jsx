@@ -1,3 +1,4 @@
+// Shell layout for the individual supporter dashboard.
 import { useState } from "react";
 import { Outlet } from "react-router-dom";
 import SupporterNavbar from "../components/SupporterNavbar";

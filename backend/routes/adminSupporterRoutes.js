@@ -1,3 +1,5 @@
+// Admin management of individual supporter/advocate accounts.
+// Mirrors adminOrgRoutes but targets IndividualProfile records.
 const express = require("express");
 const router = express.Router();
 const jwt = require("jsonwebtoken");

@@ -1,3 +1,5 @@
+// Stricter version of the auth middleware — only lets Admin users through.
+// Use this on any route that shouldn't be accessible to orgs or individuals.
 const jwt = require("jsonwebtoken");
 const User = require("../models/User");
 
@@ -14,6 +16,7 @@ const adminAuth = async (req, res, next) => {
     const decoded = jwt.verify(token, JWT_SECRET);
     const user = await User.findById(decoded.id);
     
+    // 403 (not 401) — the token is valid, but this person just doesn't have the right role
     if (!user || user.type !== "Admin") {
       return res.status(403).json({ error: "Admin access required." });
     }

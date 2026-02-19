@@ -1,3 +1,5 @@
+// Finance management page for a single project.
+// The project lead can track budgets, log expenses and see how much has been spent vs planned.
 import { useState, useEffect } from "react";
 import { useOutletContext } from "react-router-dom";
 import { 

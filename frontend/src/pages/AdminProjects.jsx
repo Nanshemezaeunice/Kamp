@@ -1,3 +1,5 @@
+// Admin project management hub.
+// Shows all projects on the platform with search/filter, edit, delete and quick access to the management page.
 import { useState, useEffect } from "react";
 import { api } from "../config";
 import { Link } from "react-router-dom";
@@ -45,6 +47,7 @@ const AdminProjects = () => {
     setConfirmModalOpen(true);
   };
 
+  // Also pull application counts per project so we can show how many people want to join
   const fetchProjects = async () => {
     try {
       setIsLoading(true);
@@ -77,6 +80,8 @@ const AdminProjects = () => {
     }
   };
 
+  // We keep handleApprove/RejectProject around in case we need to call them programmatically
+  // (e.g. from a project detail page), even though the cards no longer show these buttons.
   const handleApproveProject = async (projectId) => {
     try {
       const response = await fetch(api(`/api/projects/${projectId}/approve`), {
@@ -405,31 +410,14 @@ const AdminProjects = () => {
                       )}
 
                     <div className="mt-auto flex gap-2">
-                      {project.approvalStatus === 'pending' && (
-                        <>
-                          <button 
-                            onClick={() => handleApproveProject(project._id)}
-                            className="flex-1 px-3 py-2 bg-green-500 hover:bg-green-600 text-white text-sm font-semibold rounded-lg transition-all duration-200 text-center"
-                          >
-                            Approve
-                          </button>
-                          <button 
-                            onClick={() => handleRejectProject(project._id)}
-                            className="flex-1 px-3 py-2 bg-red-500 hover:bg-red-600 text-white text-sm font-semibold rounded-lg transition-all duration-200 text-center"
-                          >
-                            Reject
-                          </button>
-                        </>
-                      )}
-                      {project.approvalStatus !== 'pending' && (
-                        <Link 
-                          to={`/admin/projects/${project._id}`}
-                          target="_blank"
-                          className="flex-1 px-4 py-2 bg-gray-50 hover:bg-blue-600 hover:text-white text-gray-700 text-sm font-semibold rounded-lg transition-all duration-200 text-center"
-                        >
-                          Management
-                        </Link>
-                      )}
+                      {/* Admin-created projects are auto-approved, so all projects here just get the Management link */}
+                      <Link 
+                        to={`/admin/projects/${project._id}`}
+                        target="_blank"
+                        className="flex-1 px-4 py-2 bg-gray-50 hover:bg-blue-600 hover:text-white text-gray-700 text-sm font-semibold rounded-lg transition-all duration-200 text-center"
+                      >
+                        Management
+                      </Link>
                       <button 
                         onClick={() => setSelectedProject(project)}
                         className="px-3 py-2 bg-white border border-gray-200 hover:border-blue-500 hover:text-blue-600 transition rounded-lg"

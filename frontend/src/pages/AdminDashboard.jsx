@@ -1,3 +1,5 @@
+// High-level platform overview for the admin.
+// Shows running totals (projects, funds, orgs) and surfaces the most recent activity.
 import React, { useState, useEffect } from "react";
 import { api } from "../config";
 
@@ -44,9 +46,11 @@ const AdminDashboard = () => {
     return `$${value.toLocaleString()}`;
   };
 
+  // Derived stats — computed from the raw project/application arrays rather than stored server-side
   const totalRaised = projects.reduce((sum, p) => sum + (p.raised || 0), 0);
   const totalDonors = projects.reduce((sum, p) => sum + (p.donors || 0), 0);
   const uniqueNgos = new Set(projects.flatMap((p) => p.ngos || [])).size;
+  // Applications that still need a decision from the admin
   const unrespondedApplications = applications.filter(app => ["pending", "reviewed"].includes(app.status));
   const recentProjects = [...projects]
     .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))

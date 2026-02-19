@@ -1,3 +1,5 @@
+// Handles the full donation flow — individual or org, card or mobile money.
+// Orgs can log in/register inline so they don't have to leave the form.
 import { useState } from "react";
 import { api } from "../config";
 

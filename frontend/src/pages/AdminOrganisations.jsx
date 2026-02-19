@@ -1,3 +1,5 @@
+// Admin view of all registered organisations.
+// Shows verification status and lets the admin approve, suspend, or remove an org.
 import { useState, useEffect } from "react";
 import { api } from "../config";
 import { Link } from "react-router-dom";

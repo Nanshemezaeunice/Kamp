@@ -1,3 +1,6 @@
+// Application lifecycle: submit, list, review, accept/reject.
+// Uses its own inline JWT verify rather than the shared auth middleware
+// so the error messages stay consistent across the various status codes.
 const express = require("express");
 const router = express.Router();
 const Application = require("../models/Application");
@@ -25,6 +28,7 @@ router.post("/", verifyToken, async (req, res) => {
       return res.status(400).json({ message: "Missing required fields" });
     }
 
+// Once per (project, user) pair — the unique index on the model backs this up at the DB level too
     const existing = await Application.findOne({ projectId, userId: req.user.id });
     if (existing) {
       return res.status(400).json({ message: "You have already applied for this project", application: existing });

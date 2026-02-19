@@ -1,3 +1,5 @@
+// Left navigation for the admin dashboard.
+// Collapses to icon-only on desktop when the user wants more screen space.
 import { Link, useLocation } from "react-router-dom";
 
 const AdminSidebar = ({ isOpen, isCollapsed, toggleSidebar }) => {

@@ -1,3 +1,5 @@
+// Represents an org or advocate applying to join a project.
+// A unique compound index on (projectId, userId) prevents double-applying.
 const mongoose = require("mongoose");
 
 const applicationSchema = new mongoose.Schema(
@@ -18,6 +20,7 @@ const applicationSchema = new mongoose.Schema(
       required: true,
     },
     involvementType: {
+      // How this applicant plans to contribute
       type: String,
       enum: ["Technical Support", "Funding", "Resource Provision", "Operations", "Volunteering", "Other"],
       default: "Other",
@@ -26,6 +29,7 @@ const applicationSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    // Project owner moves status from 'pending' -> 'reviewed' -> 'accepted'/'rejected'
     status: {
       type: String,
       enum: ["pending", "reviewed", "accepted", "rejected"],
@@ -39,7 +43,7 @@ const applicationSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-// Prevent duplicate applications
+// Prevent duplicate applications — one per user per project
 applicationSchema.index({ projectId: 1, userId: 1 }, { unique: true });
 
 module.exports = mongoose.model("Application", applicationSchema);

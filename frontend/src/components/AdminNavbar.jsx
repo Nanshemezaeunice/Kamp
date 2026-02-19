@@ -1,3 +1,4 @@
+// Top bar for the admin dashboard — houses the hamburger toggle and logout.
 import { Link, useNavigate } from "react-router-dom";
 
 const AdminNavbar = ({ toggleSidebar }) => {

@@ -1,3 +1,4 @@
+// Detailed org profile view for admin — all the info they submitted during setup in one place.
 import { useOutletContext } from "react-router-dom";
 import { Mail, Phone, Globe, MapPin, Calendar, Users, FileText, Target, Building2 } from "lucide-react";
 

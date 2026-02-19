@@ -1,3 +1,4 @@
+// Top bar for the organisation dashboard.
 import { Link, useNavigate } from "react-router-dom";
 
 const OrgNavbar = ({ toggleSidebar }) => {

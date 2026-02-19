@@ -1,3 +1,4 @@
+// Left sidebar for the supporter (individual user) dashboard.
 import { Link, useLocation } from "react-router-dom";
 
 const SupporterSidebar = ({ isOpen, isCollapsed, toggleSidebar }) => {

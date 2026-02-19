@@ -1,3 +1,5 @@
+// Outer shell for the project management area.
+// Loads the project once and passes it down via Outlet context to all child routes.
 import { useState, useEffect } from "react";
 import { useParams, NavLink, Outlet, Link, useNavigate } from "react-router-dom";
 import { LayoutDashboard, Users, ArrowLeft, ExternalLink, Settings, Building2, Heart } from "lucide-react";

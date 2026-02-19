@@ -1,3 +1,5 @@
+// Settings page for organisations — update profile info, change password and manage org details.
+// All tabs save independently so nothing is lost if one section fails.
 import { useState, useEffect } from "react";
 import { api } from "../config";
 import { User, Lock, Building2, Mail, Eye, EyeOff, Upload, Camera } from "lucide-react";

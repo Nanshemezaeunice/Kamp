@@ -1,3 +1,6 @@
+// Core project CRUD plus approval workflow.
+// Admin-created projects are auto-approved; org/advocate projects start as 'pending'
+// and need explicit admin review before they go public.
 const express = require('express');
 const router = express.Router();
 const Project = require('../models/Project');
@@ -9,7 +12,7 @@ const jwt = require('jsonwebtoken');
 
 const JWT_SECRET = process.env.JWT_SECRET || 'kamp_secret_key_2026';
 
-// Helper to get user from token if exists (without throwing error)
+// Soft auth helper — extracts user from token if present but never rejects unauthenticated requests
 const getOptionalUser = async (req) => {
   const token = req.header('Authorization')?.replace('Bearer ', '');
   if (!token) return null;

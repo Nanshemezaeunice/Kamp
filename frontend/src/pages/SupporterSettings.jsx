@@ -1,3 +1,4 @@
+// Settings page for individual supporters — same structure as OrgSettings but with supporter-specific fields.
 import { useState, useEffect } from "react";
 import { api } from "../config";
 import { User, Lock, Heart, Mail, Eye, EyeOff, Upload, Camera } from "lucide-react";

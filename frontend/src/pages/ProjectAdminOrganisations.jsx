@@ -1,3 +1,5 @@
+// Manage organisation applications for a specific project.
+// The project manager can review, accept or reject org applicants from here.
 import { useState, useEffect } from "react";
 import { api } from "../config";
 import { useOutletContext } from "react-router-dom";

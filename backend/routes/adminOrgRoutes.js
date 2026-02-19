@@ -1,3 +1,5 @@
+// Admin-only CRUD for organisations — verify, suspend, delete, and inspect their projects.
+// Everything here goes through adminAuth so regular users can never reach it.
 const express = require("express");
 const router = express.Router();
 const jwt = require("jsonwebtoken");

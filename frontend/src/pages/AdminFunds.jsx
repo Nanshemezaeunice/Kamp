@@ -1,3 +1,5 @@
+// Platform-wide financial overview for the admin.
+// Shows donations, member contributions and spending per project in one place.
 import { useState, useEffect } from "react";
 import { api } from "../config";
 

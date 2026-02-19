@@ -1,3 +1,5 @@
+// Layout wrapper for the admin view of a specific organisation.
+// Loads the org details and stitches together the sidebar nav + page content.
 import { useState, useEffect } from "react";
 import { Outlet, Link, useParams, useLocation } from "react-router-dom";
 import { Building2, LayoutDashboard, FolderKanban, Settings, ArrowLeft } from "lucide-react";

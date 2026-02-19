@@ -1,3 +1,5 @@
+// Overview page shown to org users right after login.
+// Fetches their personalised stats — projects managed, money raised, donation volume.
 import { useEffect, useState } from "react";
 import { api } from "../config";
 

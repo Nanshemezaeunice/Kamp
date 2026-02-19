@@ -1,3 +1,5 @@
+// The About page covers KAMP's mission, story, values and live platform stats.
+// Stats are fetched live so the numbers stay honest.
 import { useState, useEffect } from "react";
 import { api } from "../config";
 import { Eye, Handshake, Heart } from "lucide-react";
@@ -96,7 +98,7 @@ const About = () => {
             </p>
           </div>
           <img 
-            src="https://images.unsplash.com/photo-1469169504649-88b996d3dd5f?w=600&h=500&fit=crop"
+            src="/Gemini_Generated_Image_7cajyp7cajyp7caj.png"
             alt="Our Story"
             className="rounded-xl shadow-lg"
           />

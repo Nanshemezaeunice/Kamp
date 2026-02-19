@@ -1,3 +1,4 @@
+// Landing page — first thing visitors see. Keep it punchy and action-oriented.
 import { Link } from "react-router-dom";
 
 const Home = () => {
@@ -64,7 +65,7 @@ const Home = () => {
             </div>
             <div className="rounded-xl overflow-hidden bg-gray-50 shadow-lg hover:shadow-xl transition">
               <img 
-                src="https://images.unsplash.com/photo-1469169504649-88b996d3dd5f?w=500&h=300&fit=crop"
+                src="https://labyrinthinc.com/wp-content/uploads/2019/06/Convertattendeestodonors-1.jpg"
                 alt="Donors Fund Projects"
                 className="w-full h-48 object-cover"
               />

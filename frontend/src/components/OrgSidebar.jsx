@@ -1,3 +1,5 @@
+// Left sidebar for the organisation dashboard.
+// Mirrors the AdminSidebar structure but scoped to org-level routes.
 import { Link, useLocation } from "react-router-dom";
 
 const OrgSidebar = ({ isOpen, isCollapsed, toggleSidebar }) => {

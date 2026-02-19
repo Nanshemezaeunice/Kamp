@@ -1,3 +1,5 @@
+// User account management — fetch your own details, update name/email, change password.
+// Only the account owner can access their own data (no user-A reading user-B).
 const express = require("express");
 const router = express.Router();
 const jwt = require("jsonwebtoken");

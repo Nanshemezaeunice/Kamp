@@ -1,12 +1,16 @@
+// Dashboard overview for individual supporters (advocates/donors).
+// Pulls scoped stats so each supporter only sees their own activity.
 import { useState, useEffect } from "react";
 import { api } from "../config";
 
 const SupporterDashboardHome = () => {
   const user = JSON.parse(localStorage.getItem("kamp_user") || "{}");
-  const [stats, setStats] = useState({ projectsInvolved: 0, totalDonated: 0, projectsBrowsed: 0 });
+  // totalRaised needs a default of 0 so toLocaleString() never blows up before data arrives
+  const [stats, setStats] = useState({ projectsInvolved: 0, totalDonated: 0, totalRaised: 0 });
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    // Pull both dashboard overview stats and raw donations, then combine them
     const fetchStats = async () => {
       try {
         const token = localStorage.getItem("kamp_token");
@@ -30,6 +34,7 @@ const SupporterDashboardHome = () => {
         }
         
         let totalDonated = 0;
+        // Add up only the donations that belong to the logged-in user
         if (donRes.ok) {
           const donations = await donRes.json();
           const myDonations = donations.filter((d) => d.email === user.email);

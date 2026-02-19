@@ -1,3 +1,5 @@
+// All-projects view for logged-in organisations.
+// Shows every public project plus ones they've created or joined, with apply/donate/create actions.
 import { useState, useEffect } from "react";
 import { CheckCircle, Clock, XCircle, Eye, Plus } from "lucide-react";
 import ProjectInfoModal from "../components/ProjectInfoModal";

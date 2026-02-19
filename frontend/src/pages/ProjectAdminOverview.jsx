@@ -1,3 +1,4 @@
+// High-level stats snapshot for a single project — funding, progress, team size, and timeline.
 import { useOutletContext } from "react-router-dom";
 import { TrendingUp, Users, Target, Calendar, Info, MapPin } from "lucide-react";
 

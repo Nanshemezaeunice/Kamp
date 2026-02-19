@@ -1,3 +1,4 @@
+// Lists all projects associated with a specific organisation for admin review.
 import { useState, useEffect } from "react";
 import { api } from "../config";
 import { useParams, Link, useOutletContext } from "react-router-dom";

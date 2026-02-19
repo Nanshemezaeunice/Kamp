@@ -1,3 +1,5 @@
+// Authentication routes — register and login.
+// JWTs are signed with a 7-day expiry so users stay logged in across browser sessions.
 const express = require('express');
 const router = express.Router();
 const jwt = require('jsonwebtoken');
@@ -7,7 +9,8 @@ const IndividualProfile = require('../models/IndividualProfile');
 
 const JWT_SECRET = process.env.JWT_SECRET || 'kamp_secret_key_2026';
 
-// Register
+// POST /api/auth/register
+// Creates the core user record plus a stub profile so the setup wizard can pick up from there.
 router.post('/register', async (req, res) => {
   try {
     const { name, email, password, type, category, description, phone, interest, organisationType } = req.body;
@@ -20,6 +23,7 @@ router.post('/register', async (req, res) => {
     const user = new User({ name, email, password, type });
     await user.save();
 
+    // setupStatus tells the frontend whether the user still needs to fill in their profile
     let setupStatus = 'verified';
 
     if (type === 'Organization') {
@@ -29,7 +33,7 @@ router.post('/register', async (req, res) => {
         description: description || '',
         phone: phone || '',
         organisationType: organisationType || 'NGO',
-        setupStatus: 'details_pending',
+        setupStatus: 'details_pending', // org accounts must complete their profile before they can act
       });
       await profile.save();
       setupStatus = 'details_pending';
@@ -54,7 +58,8 @@ router.post('/register', async (req, res) => {
   }
 });
 
-// Login
+// POST /api/auth/login
+// Looks up the user, verifies their password and returns a fresh token with setup status.
 router.post('/login', async (req, res) => {
   try {
     const { email, password } = req.body;

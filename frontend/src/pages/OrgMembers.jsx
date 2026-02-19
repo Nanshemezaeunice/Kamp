@@ -1,3 +1,4 @@
+// Organisation sub-team management — invite colleagues, assign roles and revoke access.
 import { useState, useEffect } from "react";
 import { api } from "../config";
 import { Users, Shield, Eye, UserCheck } from "lucide-react";

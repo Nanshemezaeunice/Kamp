@@ -1,3 +1,6 @@
+// Detailed profile for Organisation accounts.
+// Separated from User so the auth model stays lean.
+// setupStatus drives the onboarding flow: details_pending → under_review → verified.
 const mongoose = require("mongoose");
 
 const orgProfileSchema = new mongoose.Schema(

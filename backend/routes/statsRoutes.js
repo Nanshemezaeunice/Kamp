@@ -1,3 +1,5 @@
+// Read-only stats endpoints used across the platform.
+// These are purely aggregated reads, never writes — keep them cheap.
 const express = require('express');
 const router = express.Router();
 const Project = require('../models/Project');

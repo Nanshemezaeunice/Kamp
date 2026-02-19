@@ -1,3 +1,5 @@
+// Tracks every expense charged against a project budget.
+// Storing the receipt and vendor info makes auditing much easier down the line.
 const mongoose = require('mongoose');
 
 const expenditureSchema = new mongoose.Schema({

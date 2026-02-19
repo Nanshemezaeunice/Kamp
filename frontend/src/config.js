@@ -1,6 +1,9 @@
+// Central API config — read the base URL from the Vite env and expose helpers.
+// Set VITE_API_BASE in your .env file (or Netlify env vars) to point at the real backend.
 export const API_BASE = import.meta.env.VITE_API_BASE || "http://localhost:3001";
 export const ENV = import.meta.env.VITE_ENV || "development";
 
+// Builds a full URL from a path fragment — avoids double-slashes and is safe to call anywhere.
 export function api(path) {
   const base = API_BASE.replace(/\/+$/, "");
   const p = path.startsWith("/") ? path : `/${path}`;

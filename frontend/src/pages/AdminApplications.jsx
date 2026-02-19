@@ -1,3 +1,5 @@
+// Admin review queue for org and advocate project applications.
+// The admin can accept, reject (with a reason) or mark an application as reviewed.
 import { useState, useEffect } from "react";
 import { api } from "../config";
 import { Building2, User, Mail, Clock, CheckCircle, XCircle, ExternalLink, Eye } from "lucide-react";

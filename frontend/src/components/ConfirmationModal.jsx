@@ -1,3 +1,5 @@
+// Reusable confirmation dialog used for destructive or sensitive actions.
+// Pass `type` to control the accent colour and icon (danger = red, success = green, etc.).
 import React from 'react';
 import { X, AlertTriangle, CheckCircle, Info, Trash2, Ban, PauseCircle } from 'lucide-react';
 

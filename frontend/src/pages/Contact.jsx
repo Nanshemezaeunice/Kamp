@@ -1,3 +1,5 @@
+// Simple contact page with our location, working hours and email address.
+// No form submission yet — links directly to email for now.
 import { Mail, Phone, MapPin, Clock } from "lucide-react";
 
 const Contact = () => {

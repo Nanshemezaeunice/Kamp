@@ -1,3 +1,4 @@
+// Wraps all public-facing pages with the shared navbar and footer.
 import { Outlet } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";

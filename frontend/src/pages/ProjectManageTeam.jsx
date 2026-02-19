@@ -1,3 +1,4 @@
+// Shows everyone on a project: the creator (project head) and all accepted partner orgs/advocates.
 import { useState, useEffect } from "react";
 import { useOutletContext } from "react-router-dom";
 import { Users, Crown, UserCheck, Calendar, Building2, Heart, Mail } from "lucide-react";
