@@ -267,12 +267,13 @@ const AdminFunds = () => {
           <h2 className="text-lg font-bold text-gray-800 mb-4">Recent Donations (All Projects)</h2>
           <div className="space-y-3 max-h-80 overflow-y-auto">
             {recentDonations.map((d, i) => (
-              <div key={i} className="flex justify-between items-center pb-3 border-b border-gray-50 last:border-b-0">
+              <div key={i} className="flex justify-between items-start pb-3 border-b border-gray-50 last:border-b-0">
                 <div>
                   <p className="font-medium text-gray-800 text-sm">{d.name}</p>
                   <p className="text-xs text-gray-400">{d.projectId?.name || 'Unknown project'} — {new Date(d.createdAt).toLocaleDateString()}</p>
+                  {d.cause && <p className="text-xs text-blue-500 font-medium mt-0.5">Cause: {d.cause}</p>}
                 </div>
-                <span className="font-bold text-green-600 text-sm">+${d.amount?.toLocaleString()}</span>
+                <span className="font-bold text-green-600 text-sm shrink-0 ml-3">+${d.amount?.toLocaleString()}</span>
               </div>
             ))}
             {recentDonations.length === 0 && <p className="text-gray-400 text-sm">No donations yet</p>}

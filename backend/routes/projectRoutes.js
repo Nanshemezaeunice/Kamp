@@ -300,6 +300,120 @@ router.put('/:id/respond-partner', auth, async (req, res) => {
   }
 });
 
+// @route   GET /api/projects/my-involvement
+// @desc    All projects the current user is involved in — as creator, accepted applicant, or accepted tagged partner.
+//          Must be registered before /:id to avoid that catch-all swallowing the literal "my-involvement" string.
+router.get('/my-involvement', auth, async (req, res) => {
+  try {
+    const userId = req.userId;
+
+    // 1. Projects this user created
+    const createdProjects = await Project.find({ creatorId: userId })
+      .populate('creatorId', 'name email type')
+      .sort({ createdAt: -1 });
+
+    // 2. Projects they applied to and were accepted
+    const acceptedApps = await Application.find({ userId, status: 'accepted' })
+      .populate({
+        path: 'projectId',
+        populate: { path: 'creatorId', select: 'name email type' }
+      });
+
+    // 3. Projects where user is an accepted tagged partner org
+    const taggedOrgProjects = await Project.find({
+      partnerOrganisations: { $elemMatch: { userId, status: 'accepted' } }
+    }).populate('creatorId', 'name email type');
+
+    // 4. Projects where user is an accepted tagged advocate
+    const taggedAdvProjects = await Project.find({
+      partnerAdvocates: { $elemMatch: { userId, status: 'accepted' } }
+    }).populate('creatorId', 'name email type');
+
+    // Deduplicate — a single project might match more than one source
+    const seen = new Set();
+    const result = [];
+
+    for (const p of createdProjects) {
+      if (!seen.has(p._id.toString())) {
+        seen.add(p._id.toString());
+        result.push({ ...p.toObject(), role: 'creator' });
+      }
+    }
+    for (const app of acceptedApps) {
+      if (app.projectId && !seen.has(app.projectId._id.toString())) {
+        seen.add(app.projectId._id.toString());
+        result.push({ ...app.projectId.toObject(), role: 'member', involvementType: app.involvementType });
+      }
+    }
+    for (const p of [...taggedOrgProjects, ...taggedAdvProjects]) {
+      if (!seen.has(p._id.toString())) {
+        seen.add(p._id.toString());
+        result.push({ ...p.toObject(), role: 'partner' });
+      }
+    }
+
+    res.json(result);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
+// @route   PUT /api/projects/:id/respond-partner
+// @desc    Accept or decline a tagged partner invitation
+router.put('/:id/respond-partner', auth, async (req, res) => {
+  try {
+    const { response } = req.body; // 'accepted' | 'declined'
+    if (!['accepted', 'declined'].includes(response)) {
+      return res.status(400).json({ message: 'Response must be "accepted" or "declined"' });
+    }
+
+    const project = await Project.findById(req.params.id);
+    if (!project) return res.status(404).json({ message: 'Project not found' });
+
+    let updated = false;
+
+    const orgIdx = project.partnerOrganisations?.findIndex(
+      p => p.userId?.toString() === req.userId
+    );
+    if (orgIdx >= 0) {
+      project.partnerOrganisations[orgIdx].status = response;
+      updated = true;
+    }
+
+    const advIdx = project.partnerAdvocates?.findIndex(
+      p => p.userId?.toString() === req.userId
+    );
+    if (advIdx >= 0) {
+      project.partnerAdvocates[advIdx].status = response;
+      updated = true;
+    }
+
+    if (!updated) return res.status(404).json({ message: 'You are not listed as a partner on this project' });
+
+    await project.save();
+
+    // Let the project creator know the response
+    await Notification.create({
+      userId: project.creatorId,
+      type: response === 'accepted' ? 'partner_accepted' : 'partner_declined',
+      title: response === 'accepted' ? 'Partnership Accepted' : 'Partnership Declined',
+      message: `${req.user.name} has ${response} your partnership invitation for "${project.name}".`,
+      projectId: project._id,
+      fromUserId: req.userId
+    });
+
+    // Mark the original invitation notification as read so it stops showing in the bell
+    await Notification.updateMany(
+      { userId: req.userId, type: 'partner_invitation', projectId: project._id },
+      { read: true }
+    );
+
+    res.json({ message: `Partnership ${response} successfully` });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
 // @route   GET /api/projects/:id
 // @desc    Get project by ID (with visibility controls)
 router.get('/:id', async (req, res) => {

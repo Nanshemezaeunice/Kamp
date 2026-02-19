@@ -1,7 +1,7 @@
-// Shows only the projects this supporter created (not ones they applied to join).
+// Projects the advocate is involved in — created, accepted application, or tagged as partner.
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { FolderKanban, Calendar, DollarSign, Users, TrendingUp, ExternalLink } from "lucide-react";
+import { FolderKanban, ExternalLink } from "lucide-react";
 import { api } from "../config";
 
 const SupporterMyProjects = () => {
@@ -16,28 +16,24 @@ const SupporterMyProjects = () => {
   const fetchMyProjects = async () => {
     try {
       setLoading(true);
-      // Fetch applications where this supporter was accepted
-      const appsRes = await fetch(api("/api/applications/my-applications"), {
+      const res = await fetch(api("/api/projects/my-involvement"), {
         headers: { Authorization: `Bearer ${token}` },
       });
-      
-      if (appsRes.ok) {
-        const applications = await appsRes.json();
-        // Filter only accepted applications with populated project data
-        const acceptedProjects = applications
-          .filter(app => app.status === "accepted" && app.projectId)
-          .map(app => ({
-            ...app.projectId,
-            involvementType: app.involvementType,
-            joinedAt: app.updatedAt
-          }));
-        setProjects(acceptedProjects);
+      if (res.ok) {
+        const data = await res.json();
+        setProjects(data);
       }
     } catch (error) {
       console.error("Error fetching my projects:", error);
     } finally {
       setLoading(false);
     }
+  };
+
+  const roleBadge = (project) => {
+    if (project.role === "creator") return { label: "Creator", cls: "bg-purple-100 text-purple-700" };
+    if (project.role === "partner") return { label: "Partner", cls: "bg-blue-100 text-blue-700" };
+    return { label: project.involvementType || "Advocate", cls: "bg-green-100 text-green-700" };
   };
 
   const getStatusColor = (status) => {
@@ -67,7 +63,7 @@ const SupporterMyProjects = () => {
     <div>
       <div className="mb-8">
         <h1 className="text-2xl font-bold text-gray-800 mb-2">My Projects</h1>
-        <p className="text-gray-500">Projects you are officially involved in as an advocate</p>
+        <p className="text-gray-500">Projects you created, partnered on, or joined through an application</p>
       </div>
 
       {projects.length === 0 ? (
@@ -75,7 +71,7 @@ const SupporterMyProjects = () => {
           <FolderKanban className="w-12 h-12 text-gray-400 mx-auto mb-4" />
           <h3 className="text-lg font-medium text-gray-900 mb-2">No Projects Yet</h3>
           <p className="text-gray-500 mb-4">
-            You haven&apos;t been accepted into any projects yet.
+            You haven&apos;t created or joined any projects yet.
           </p>
           <Link
             to="/supporter/projects"
@@ -87,34 +83,34 @@ const SupporterMyProjects = () => {
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {projects.map((project) => {
-            const progress = project.goal > 0 
-              ? Math.round((project.raised / project.goal) * 100) 
+            const progress = project.goal > 0
+              ? Math.round(((project.raised || 0) / project.goal) * 100)
               : 0;
+            const badge = roleBadge(project);
 
             return (
-              <Link
+              <div
                 key={project._id}
-                to={`/supporter/my-projects/${project._id}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden hover:shadow-lg transition-all group"
+                className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden hover:shadow-lg transition-all group flex flex-col"
               >
                 {project.image && (
                   <div className="h-40 overflow-hidden">
-                    <img 
-                      src={project.image} 
-                      alt={project.name} 
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" 
+                    <img
+                      src={project.image}
+                      alt={project.name}
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                     />
                   </div>
                 )}
-                
-                <div className="p-5">
+
+                <div className="p-5 flex flex-col flex-1">
                   <div className="flex items-center justify-between mb-3">
                     <span className={`text-xs font-semibold px-3 py-1 rounded-full ${getStatusColor(project.status)}`}>
                       {project.status || "Active"}
                     </span>
-                    <ExternalLink className="w-4 h-4 text-gray-400 group-hover:text-blue-600 transition" />
+                    <span className={`text-xs font-bold px-3 py-1 rounded-full ${badge.cls}`}>
+                      {badge.label}
+                    </span>
                   </div>
 
                   <h3 className="font-bold text-gray-900 mb-2 group-hover:text-blue-600 transition">
@@ -124,18 +120,11 @@ const SupporterMyProjects = () => {
                     {project.description}
                   </p>
 
-                  <div className="space-y-3 mb-4">
-                    <div className="flex items-center gap-2 text-xs text-gray-500">
-                      <TrendingUp className="w-4 h-4 text-blue-600" />
-                      <span className="font-semibold text-blue-600 uppercase">{project.involvementType}</span>
-                    </div>
-                    <div className="flex items-center gap-2 text-xs text-gray-500">
-                      <Calendar className="w-4 h-4" />
-                      <span>Joined {new Date(project.joinedAt).toLocaleDateString()}</span>
-                    </div>
-                  </div>
+                  {project.role === "creator" && project.approvalStatus === "pending" && (
+                    <p className="text-xs text-amber-600 font-semibold mb-3">⏳ Awaiting admin approval</p>
+                  )}
 
-                  <div className="space-y-2">
+                  <div className="space-y-2 mb-4">
                     <div className="flex justify-between items-center text-sm">
                       <span className="text-gray-600">Raised</span>
                       <span className="font-bold text-gray-900">
@@ -143,18 +132,26 @@ const SupporterMyProjects = () => {
                       </span>
                     </div>
                     <div className="w-full bg-gray-200 rounded-full h-2">
-                      <div 
+                      <div
                         className="bg-blue-600 h-2 rounded-full transition-all"
                         style={{ width: `${Math.min(progress, 100)}%` }}
                       />
                     </div>
-                    <div className="flex justify-between text-xs text-gray-500">
-                      <span>{progress}% funded</span>
-                      <span>{project.donors || 0} donors</span>
-                    </div>
+                  </div>
+
+                  <div className="mt-auto">
+                    <Link
+                      to={`/supporter/my-projects/${project._id}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center justify-center gap-2 w-full py-2 bg-blue-50 hover:bg-blue-600 hover:text-white text-blue-700 text-sm font-semibold rounded-lg transition"
+                    >
+                      <ExternalLink className="w-4 h-4" />
+                      Manage Project
+                    </Link>
                   </div>
                 </div>
-              </Link>
+              </div>
             );
           })}
         </div>
